@@ -56,6 +56,9 @@ export default function TasksPage() {
 
     const handleAcceptTask = () => {
         if (!selectedTask) return;
+        // Here you would typically call an API to accept the task.
+        // The API would handle the "first come, first served" logic.
+        // For this demo, we'll just simulate it.
         toast({
             title: "Task Accepted!",
             description: `You are now assigned to the pickup from ${selectedTask.provider}.`,
