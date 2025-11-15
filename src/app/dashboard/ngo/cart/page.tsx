@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 export default function CartPage() {
-    const { cart, setCart, setLastOrder } = useAppContext();
+    const { cart, setCart, setLastOrder, offers, setOffers } = useAppContext();
     const { toast } = useToast();
     const router = useRouter();
 
@@ -28,6 +28,21 @@ export default function CartPage() {
 
     const handleConfirmPickup = () => {
         setLastOrder(groupedByProvider);
+
+        // Update offer quantities
+        const updatedOffers = offers.map(originalOffer => {
+            const cartItem = cart.find(item => item.offer.id === originalOffer.id);
+            if (cartItem) {
+                const newQuantity = originalOffer.quantity - cartItem.quantity;
+                if (newQuantity <= 0) {
+                    return { ...originalOffer, quantity: 0, status: 'Reserved' as const };
+                }
+                return { ...originalOffer, quantity: newQuantity };
+            }
+            return originalOffer;
+        });
+
+        setOffers(updatedOffers);
 
         // Navigate before clearing the cart
         router.push("/dashboard/ngo/assign-driver");
