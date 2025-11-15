@@ -35,8 +35,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 // Mock user data. In a real app, this would come from an auth context.
 const user = {
@@ -84,16 +84,26 @@ const roleConfig = {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [currentRole, setCurrentRole] = useState<keyof typeof roleConfig>('provider');
 
-  const getRoleFromPath = (): keyof typeof roleConfig => {
-    if (pathname.startsWith('/dashboard/provider')) return 'provider';
-    if (pathname.startsWith('/dashboard/ngo')) return 'ngo';
-    if (pathname.startsWith('/dashboard/driver')) return 'driver';
-    return 'provider'; // Default role
+  useEffect(() => {
+    const getRoleFromPath = (): keyof typeof roleConfig => {
+      if (pathname.startsWith('/dashboard/provider')) return 'provider';
+      if (pathname.startsWith('/dashboard/ngo')) return 'ngo';
+      if (pathname.startsWith('/dashboard/driver')) return 'driver';
+      return 'provider'; // Default role
+    };
+    setCurrentRole(getRoleFromPath());
+  }, [pathname]);
+
+
+  const { nav: currentNavItems, title: pageTitle } = roleConfig[currentRole];
+
+  const handleLogout = () => {
+    // In a real app, you'd clear auth state here
+    router.push('/login');
   };
-
-  const role = getRoleFromPath();
-  const { nav: currentNavItems, title: pageTitle } = roleConfig[role];
 
   return (
     <SidebarProvider>
@@ -162,16 +172,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <div className="text-xs text-muted-foreground">{user.email}</div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
