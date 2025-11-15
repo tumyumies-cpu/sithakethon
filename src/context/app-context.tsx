@@ -46,6 +46,20 @@ export interface Driver {
 
 export type GroupedOrder = Record<string, { provider: { name: string; logo: string; location: string; }; items: CartItem[]; }>;
 
+export interface HistoryEntry {
+  id: string;
+  item: string;
+  provider: string;
+  ngo: string;
+  driver: string;
+  date: string;
+  status: 'Completed' | 'Rejected' | 'Expired';
+  tokens: number;
+  quantity: number;
+  quantityUnit: string;
+}
+
+
 interface AppContextType {
   cart: CartItem[];
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
@@ -62,6 +76,8 @@ interface AppContextType {
   setLastOrder: React.Dispatch<React.SetStateAction<GroupedOrder>>;
   drivers: Driver[];
   setDrivers: React.Dispatch<React.SetStateAction<Driver[]>>;
+  history: HistoryEntry[];
+  addHistory: (entry: HistoryEntry) => void;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -176,6 +192,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [offers, setOffers] = useState<Offer[]>(initialOffers);
   const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [currentRole, setCurrentRole] = useState<Role>('provider');
   const [pageTitle, setPageTitle] = useState('Provider Dashboard');
   const [lastOrder, setLastOrder] = useState<GroupedOrder>({});
@@ -188,6 +205,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const addOffer = (offer: Offer) => {
     setOffers(prevOffers => [offer, ...prevOffers]);
+  };
+  
+  const addHistory = (entry: HistoryEntry) => {
+    setHistory(prevHistory => [entry, ...prevHistory]);
   };
 
   useEffect(() => {
@@ -216,7 +237,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     offers, setOffers,
     addOffer,
     lastOrder, setLastOrder,
-    drivers, setDrivers
+    drivers, setDrivers,
+    history, addHistory,
   };
 
   return (

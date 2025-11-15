@@ -1,3 +1,6 @@
+
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   Table,
@@ -8,40 +11,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-
-const history = [
-    {
-        id: "HIST-001",
-        offerId: "OFF-004",
-        item: "Idli & Sambar",
-        status: "Delivered",
-        ngo: "Good Samaritan Shelter",
-        date: "2 days ago",
-        meals: 30,
-    },
-    {
-        id: "HIST-002",
-        offerId: "OFF-003",
-        item: "Mixed Dal & Rice",
-        status: "Delivered",
-        ngo: "City Food Bank",
-        date: "1 day ago",
-        meals: 40,
-    },
-     {
-        id: "HIST-003",
-        offerId: "OFF-00X",
-        item: "Expired Sandwiches",
-        status: "Expired",
-        ngo: "N/A",
-        date: "3 days ago",
-        meals: 0,
-    },
-];
+import { useAppContext } from "@/context/app-context";
 
 const getStatusBadgeVariant = (status: string): "success" | "destructive" => {
     switch (status) {
-        case "Delivered":
+        case "Completed":
             return "success";
         default:
             return "destructive";
@@ -49,6 +23,10 @@ const getStatusBadgeVariant = (status: string): "success" | "destructive" => {
 }
 
 export default function HistoryPage() {
+  const { history } = useAppContext();
+  // Mocking current provider name for demo
+  const providerHistory = history.filter(h => h.provider === 'The Grand Restaurant');
+
   return (
     <Card>
       <CardHeader>
@@ -69,7 +47,7 @@ export default function HistoryPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {history.map((entry) => (
+            {providerHistory.map((entry) => (
               <TableRow key={entry.id}>
                 <TableCell className="font-medium">{entry.item}</TableCell>
                 <TableCell>
@@ -77,9 +55,16 @@ export default function HistoryPage() {
                 </TableCell>
                 <TableCell>{entry.ngo}</TableCell>
                 <TableCell>{entry.date}</TableCell>
-                <TableCell className="text-right">{entry.meals}</TableCell>
+                <TableCell className="text-right">{Math.floor(entry.quantity * 2.5)}</TableCell>
               </TableRow>
             ))}
+             {providerHistory.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                  You have no donation history yet.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </CardContent>

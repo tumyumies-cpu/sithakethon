@@ -21,12 +21,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useAppContext, HistoryEntry } from "@/context/app-context";
+import { format } from "date-fns";
 
 
 const initialPickups = [
     {
         id: "RES-NGO-002",
         item: "Paneer Butter Masala",
+        quantity: 4,
+        quantityUnit: 'kg',
         provider: "The Grand Restaurant",
         providerLogo: "https://picsum.photos/seed/p-logo2/40/40",
         providerAddress: "123, 1st Main, Indiranagar, Bangalore",
@@ -56,21 +60,34 @@ const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outli
 export default function PickupsPage() {
     const [activePickups, setActivePickups] = useState<Pickup[]>(initialPickups);
     const { toast } = useToast();
+    const { addHistory } = useAppContext();
 
-    const handleUpdateStatus = (pickupId: string, newStatus: "Picked Up" | "In Transit" | "Delivered") => {
-        const updatedPickups = activePickups.map(p => 
-            p.id === pickupId ? { ...p, status: newStatus } : p
-        );
-
+    const handleUpdateStatus = (pickup: Pickup, newStatus: "In Transit" | "Delivered") => {
         if (newStatus === "Delivered") {
-            // In a real app, this item would move to a history table.
-            // For this demo, we'll filter it out from the active view.
-            setActivePickups(updatedPickups.filter(p => p.id !== pickupId));
+            const newHistoryEntry: HistoryEntry = {
+                id: `HIST-${Date.now()}`,
+                item: pickup.item,
+                provider: pickup.provider,
+                ngo: pickup.ngo,
+                driver: "Sunita Sharma", // Mock current driver
+                date: format(new Date(), "PPP"),
+                status: "Completed",
+                tokens: 50, // Mock token calculation
+                quantity: pickup.quantity,
+                quantityUnit: pickup.quantityUnit
+            };
+            addHistory(newHistoryEntry);
+            
+            setActivePickups(prev => prev.filter(p => p.id !== pickup.id));
+            
             toast({
                 title: "Delivery Confirmed!",
                 description: "The order has been marked as delivered. Great job!",
             });
         } else {
+             const updatedPickups = activePickups.map(p => 
+                p.id === pickup.id ? { ...p, status: newStatus } : p
+            );
             setActivePickups(updatedPickups);
              toast({
                 title: `Status Updated: ${newStatus}`,
@@ -119,13 +136,13 @@ export default function PickupsPage() {
                             </div>
                         </div>
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-2"><Package size={14}/> {pickup.item}</div>
+                            <div className="flex items-center gap-2"><Package size={14}/> {pickup.item} ({pickup.quantity} {pickup.quantityUnit})</div>
                             <div className="flex items-center gap-2"><Clock size={14}/> Pickup Window: {pickup.pickupTime}</div>
                         </div>
                     </CardContent>
                     <CardFooter className="flex-col sm:flex-row gap-2 justify-end bg-muted/50 p-4">
                         {pickup.status === "Awaiting Pickup" && <Button variant="outline">Navigate to Pickup</Button>}
-                        {pickup.status === "Awaiting Pickup" && <Button onClick={() => handleUpdateStatus(pickup.id, 'Picked Up')}>Mark as Picked Up</Button>}
+                        {pickup.status === "Awaiting Pickup" && <Button onClick={() => handleUpdateStatus(pickup, 'In Transit')}>Mark as Picked Up</Button>}
                         {pickup.status === "In Transit" && <Button variant="outline">Navigate to NGO</Button>}
                         {pickup.status === "In Transit" && (
                              <AlertDialog>
@@ -141,7 +158,7 @@ export default function PickupsPage() {
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => handleUpdateStatus(pickup.id, 'Delivered')}>
+                                    <AlertDialogAction onClick={() => handleUpdateStatus(pickup, 'Delivered')}>
                                         Confirm
                                     </AlertDialogAction>
                                     </AlertDialogFooter>

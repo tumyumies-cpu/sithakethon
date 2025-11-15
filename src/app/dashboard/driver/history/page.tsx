@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   Table,
@@ -10,45 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
-
-const deliveryHistory = [
-    {
-        id: "HIST-DRV-001",
-        item: "Vegetable Biryani",
-        provider: "The Grand Restaurant",
-        ngo: "Helping Hands Foundation",
-        date: "3 days ago",
-        status: "Completed",
-        tokens: 50,
-    },
-    {
-        id: "HIST-DRV-002",
-        item: "Fresh Vegetables",
-        provider: "Local Farm Co-op",
-        ngo: "Good Samaritan Shelter",
-        date: "2 days ago",
-        status: "Completed",
-        tokens: 75,
-    },
-    {
-        id: "HIST-DRV-003",
-        item: "Idli & Sambar",
-        provider: "Daily Breakfast",
-        ngo: "City Food Bank",
-        date: "2 days ago",
-        status: "Rejected",
-        tokens: 0,
-    },
-    {
-        id: "HIST-DRV-004",
-        item: "Surplus Bread & Pastries",
-        provider: "City Bakery",
-        ngo: "Good Samaritan Shelter",
-        date: "1 day ago",
-        status: "Completed",
-        tokens: 40,
-    },
-];
+import { useAppContext } from "@/context/app-context";
 
 const getStatusBadgeVariant = (status: string): "success" | "destructive" => {
     switch (status) {
@@ -60,6 +24,9 @@ const getStatusBadgeVariant = (status: string): "success" | "destructive" => {
 }
 
 export default function HistoryPage() {
+  const { history } = useAppContext();
+  const driverHistory = history.filter(h => h.driver === 'Sunita Sharma'); // Mocking current driver
+
   return (
     <Card>
       <CardHeader>
@@ -81,7 +48,7 @@ export default function HistoryPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {deliveryHistory.map((entry) => (
+            {driverHistory.map((entry) => (
               <TableRow key={entry.id}>
                 <TableCell className="font-medium">{entry.item}</TableCell>
                 <TableCell>{entry.provider}</TableCell>
@@ -99,6 +66,13 @@ export default function HistoryPage() {
                 </TableCell>
               </TableRow>
             ))}
+             {driverHistory.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                  You have no delivery history yet.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </CardContent>

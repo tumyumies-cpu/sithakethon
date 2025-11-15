@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -27,33 +28,39 @@ export default function CartPage() {
     };
 
     const handleConfirmPickup = () => {
-        setLastOrder(groupedByProvider);
+        // This function will now be called, and then we navigate,
+        // and only after navigation do we clear the cart.
+        const processOrder = () => {
+            setLastOrder(groupedByProvider);
 
-        // Update offer quantities
-        const updatedOffers = offers.map(originalOffer => {
-            const cartItem = cart.find(item => item.offer.id === originalOffer.id);
-            if (cartItem) {
-                const newQuantity = originalOffer.quantity - cartItem.quantity;
-                if (newQuantity <= 0) {
-                    return { ...originalOffer, quantity: 0, status: 'Reserved' as const };
+            // Update offer quantities
+            const updatedOffers = offers.map(originalOffer => {
+                const cartItem = cart.find(item => item.offer.id === originalOffer.id);
+                if (cartItem) {
+                    const newQuantity = originalOffer.quantity - cartItem.quantity;
+                    return { 
+                        ...originalOffer, 
+                        quantity: newQuantity,
+                        status: newQuantity <= 0 ? 'Reserved' : originalOffer.status,
+                    };
                 }
-                return { ...originalOffer, quantity: newQuantity };
-            }
-            return originalOffer;
-        });
+                return originalOffer;
+            });
 
-        setOffers(updatedOffers);
+            setOffers(updatedOffers);
 
-        // Navigate before clearing the cart
+            toast({
+                title: "Pickup Confirmed!",
+                description: "Now, let's assign drivers for each pickup location.",
+            });
+            
+            // Clear cart after all processing is done
+            setCart([]);
+        };
+
+        // Process the order and then navigate.
+        processOrder();
         router.push("/dashboard/ngo/assign-driver");
-        
-        toast({
-            title: "Pickup Confirmed!",
-            description: "Now, let's assign drivers for each pickup location.",
-        });
-
-        // Clear cart after navigation has been initiated
-        setCart([]);
     };
 
     const groupedByProvider = useMemo(() => {

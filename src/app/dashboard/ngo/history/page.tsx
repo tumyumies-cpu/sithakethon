@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   Table,
@@ -10,49 +12,12 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import Image from 'next/image';
-
-const pickupHistory = [
-    {
-        id: "HIST-NGO-001",
-        item: "Vegetable Biryani",
-        provider: "The Grand Restaurant",
-        providerLogo: "https://picsum.photos/seed/p-logo2/40/40",
-        date: "3 days ago",
-        quantity: "5 kg",
-        status: "Delivered",
-    },
-    {
-        id: "HIST-NGO-002",
-        item: "Fresh Vegetables",
-        provider: "Local Farm Co-op",
-        providerLogo: "https://picsum.photos/seed/p-logo3/40/40",
-        date: "2 days ago",
-        quantity: "20 kg",
-        status: "Delivered",
-    },
-    {
-        id: "HIST-NGO-003",
-        item: "Idli & Sambar",
-        provider: "Daily Breakfast",
-        providerLogo: "https://picsum.photos/seed/p-logo-generic/40/40",
-        date: "2 days ago",
-        quantity: "6 kg",
-        status: "Delivered",
-    },
-    {
-        id: "HIST-NGO-004",
-        item: "Surplus Bread & Pastries",
-        provider: "City Bakery",
-        providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
-        date: "1 day ago",
-        quantity: "8 kg",
-        status: "Delivered",
-    },
-];
+import { useAppContext } from "@/context/app-context";
 
 const getStatusBadgeVariant = (status: string): "success" | "destructive" => {
     switch (status) {
         case "Delivered":
+        case "Completed":
             return "success";
         default:
             return "destructive";
@@ -61,6 +26,10 @@ const getStatusBadgeVariant = (status: string): "success" | "destructive" => {
 
 
 export default function HistoryPage() {
+  const { history, offers } = useAppContext();
+  // Mocking current NGO name
+  const ngoHistory = history.filter(h => h.ngo === 'Helping Hands Foundation');
+
   return (
     <Card>
       <CardHeader>
@@ -81,22 +50,31 @@ export default function HistoryPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {pickupHistory.map((entry) => (
+            {ngoHistory.map((entry) => {
+              const originalOffer = offers.find(o => o.item === entry.item && o.provider === entry.provider)
+              return (
               <TableRow key={entry.id}>
                 <TableCell className="font-medium">{entry.item}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Image src={entry.providerLogo} alt={entry.provider} width={24} height={24} className="rounded-full" />
+                    <Image src={originalOffer?.providerLogo || "https://picsum.photos/seed/generic/40/40"} alt={entry.provider} width={24} height={24} className="rounded-full" />
                     <span>{entry.provider}</span>
                   </div>
                 </TableCell>
                 <TableCell>{entry.date}</TableCell>
-                <TableCell>{entry.quantity}</TableCell>
+                <TableCell>{entry.quantity} {entry.quantityUnit}</TableCell>
                 <TableCell>
                   <Badge variant={getStatusBadgeVariant(entry.status)}>{entry.status}</Badge>
                 </TableCell>
               </TableRow>
-            ))}
+            )})}
+            {ngoHistory.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                  You have no pickup history yet.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </CardContent>
