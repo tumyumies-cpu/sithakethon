@@ -40,23 +40,26 @@ function DriverScanner() {
 }
 
 export default function AssignDriverPage() {
-    const [isScanning, setIsScanning] = useState(true);
     const { lastOrder, setLastOrder } = useAppContext();
+    const [isScanning, setIsScanning] = useState(true);
+    const [isOrderConfirmed, setIsOrderConfirmed] = useState(false);
     const router = useRouter();
     const { toast } = useToast();
 
     useEffect(() => {
-        if (!lastOrder || Object.keys(lastOrder).length === 0) {
-            router.replace('/dashboard/ngo/cart');
-            return;
+        const hasOrder = lastOrder && Object.keys(lastOrder).length > 0;
+        
+        if (hasOrder) {
+            setIsOrderConfirmed(true);
+            const scanTimeout = setTimeout(() => {
+                setIsScanning(false);
+            }, 3000);
+            return () => clearTimeout(scanTimeout);
+        } else if (!isScanning) {
+             router.replace('/dashboard/ngo/cart');
         }
 
-        const scanTimeout = setTimeout(() => {
-            setIsScanning(false);
-        }, 3000);
-
-        return () => clearTimeout(scanTimeout);
-    }, [lastOrder, router]);
+    }, [lastOrder, router, isScanning]);
     
     const handleConfirmAssignments = () => {
         toast({
@@ -68,6 +71,21 @@ export default function AssignDriverPage() {
     }
 
     const availableDrivers = mockDrivers.filter(d => d.status === 'active');
+    
+    if (!isOrderConfirmed) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle>Assign Drivers for Pickup</CardTitle>
+                    <CardDescription>Match available drivers to each restaurant pickup in your order.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                     <DriverScanner />
+                </CardContent>
+            </Card>
+        );
+    }
+
 
     return (
         <Card>

@@ -28,13 +28,15 @@ export default function CartPage() {
 
     const handleConfirmPickup = () => {
         setLastOrder(groupedByProvider);
+        router.push("/dashboard/ngo/assign-driver");
+        
         toast({
             title: "Pickup Confirmed!",
             description: "Now, let's assign drivers for each pickup location.",
         });
 
+        // Clear cart after navigation has been initiated
         setCart([]);
-        router.push("/dashboard/ngo/assign-driver");
     };
 
     const groupedByProvider = useMemo(() => {
