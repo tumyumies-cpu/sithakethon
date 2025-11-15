@@ -21,28 +21,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useAppContext, HistoryEntry } from "@/context/app-context";
+import { useAppContext, HistoryEntry, Reservation } from "@/context/app-context";
 import { format } from "date-fns";
 
-
-const initialPickups = [
-    {
-        id: "RES-NGO-002",
-        item: "Paneer Butter Masala",
-        quantity: 4,
-        quantityUnit: 'kg',
-        provider: "The Grand Restaurant",
-        providerLogo: "https://picsum.photos/seed/p-logo2/40/40",
-        providerAddress: "123, 1st Main, Indiranagar, Bangalore",
-        providerContact: { name: "Mr. Sharma", phone: "+91 9988776655" },
-        status: "In Transit",
-        pickupTime: "Today, 6:00 PM",
-        ngo: "Helping Hands Foundation",
-        ngoAddress: "456, 2nd Cross, Jayanagar, Bangalore"
-    },
-];
-
-type Pickup = typeof initialPickups[0];
 
 const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outline" | "success" => {
     switch (status) {
@@ -58,18 +39,20 @@ const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outli
 }
 
 export default function PickupsPage() {
-    const [activePickups, setActivePickups] = useState<Pickup[]>(initialPickups);
     const { toast } = useToast();
-    const { addHistory } = useAppContext();
+    const { addHistory, reservations, setReservations } = useAppContext();
+    const driverName = "Sunita Sharma"; // Mock current driver
 
-    const handleUpdateStatus = (pickup: Pickup, newStatus: "In Transit" | "Delivered") => {
+    const activePickups = reservations.filter(r => r.driverName === driverName);
+
+    const handleUpdateStatus = (pickup: Reservation, newStatus: "In Transit" | "Delivered") => {
         if (newStatus === "Delivered") {
             const newHistoryEntry: HistoryEntry = {
                 id: `HIST-${Date.now()}`,
                 item: pickup.item,
                 provider: pickup.provider,
                 ngo: pickup.ngo,
-                driver: "Sunita Sharma", // Mock current driver
+                driver: driverName,
                 date: format(new Date(), "PPP"),
                 status: "Completed",
                 tokens: 50, // Mock token calculation
@@ -78,17 +61,17 @@ export default function PickupsPage() {
             };
             addHistory(newHistoryEntry);
             
-            setActivePickups(prev => prev.filter(p => p.id !== pickup.id));
+            setReservations(prev => prev.filter(p => p.id !== pickup.id));
             
             toast({
                 title: "Delivery Confirmed!",
                 description: "The order has been marked as delivered. Great job!",
             });
         } else {
-             const updatedPickups = activePickups.map(p => 
+             const updatedPickups = reservations.map(p => 
                 p.id === pickup.id ? { ...p, status: newStatus } : p
             );
-            setActivePickups(updatedPickups);
+            setReservations(updatedPickups);
              toast({
                 title: `Status Updated: ${newStatus}`,
                 description: "The job status has been updated successfully.",

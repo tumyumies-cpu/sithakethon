@@ -59,6 +59,22 @@ export interface HistoryEntry {
   quantityUnit: string;
 }
 
+export interface Reservation {
+  id: string;
+  item: string;
+  quantity: number;
+  quantityUnit: string;
+  provider: string;
+  providerLogo: string;
+  providerAddress: string;
+  providerContact: { name: string; phone: string; };
+  status: "Awaiting Pickup" | "In Transit" | "Delivered";
+  pickupTime: string;
+  ngo: string;
+  ngoAddress: string;
+  driverName: string;
+  driverAvatar: string;
+}
 
 interface AppContextType {
   cart: CartItem[];
@@ -78,6 +94,9 @@ interface AppContextType {
   setDrivers: React.Dispatch<React.SetStateAction<Driver[]>>;
   history: HistoryEntry[];
   addHistory: (entry: HistoryEntry) => void;
+  reservations: Reservation[];
+  setReservations: React.Dispatch<React.SetStateAction<Reservation[]>>;
+  addReservation: (reservation: Reservation) => void;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -96,7 +115,7 @@ const initialOffers: Offer[] = [
     quantityUnit: 'kg',
     timeCooked: '2 hours ago',
     bestBefore: "in 2 hours",
-    status: 'Reserved',
+    status: 'Active',
     createdAt: '2 hours ago',
   },
   {
@@ -193,6 +212,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [offers, setOffers] = useState<Offer[]>(initialOffers);
   const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
   const [currentRole, setCurrentRole] = useState<Role>('provider');
   const [pageTitle, setPageTitle] = useState('Provider Dashboard');
   const [lastOrder, setLastOrder] = useState<GroupedOrder>({});
@@ -209,6 +229,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   
   const addHistory = (entry: HistoryEntry) => {
     setHistory(prevHistory => [entry, ...prevHistory]);
+  };
+
+  const addReservation = (reservation: Reservation) => {
+    setReservations(prev => [...prev, reservation]);
   };
 
   useEffect(() => {
@@ -239,6 +263,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     lastOrder, setLastOrder,
     drivers, setDrivers,
     history, addHistory,
+    reservations, setReservations,
+    addReservation,
   };
 
   return (

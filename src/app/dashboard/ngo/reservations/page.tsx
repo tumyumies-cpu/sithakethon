@@ -13,56 +13,16 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from 'next/image';
+import { useAppContext } from "@/context/app-context";
+import { getStatusBadgeVariant } from "@/lib/utils";
 
-const reservations = [
-    {
-        id: "RES-NGO-001",
-        item: "Surplus Bread & Pastries",
-        provider: "City Bakery",
-        providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
-        status: "Driver Assigned",
-        driver: "Ravi Kumar",
-        driverAvatar: "https://picsum.photos/seed/driver1/100/100",
-        pickupTime: "Today, 4:00 PM",
-    },
-    {
-        id: "RES-NGO-002",
-        item: "Paneer Butter Masala",
-        provider: "The Grand Restaurant",
-        providerLogo: "https://picsum.photos/seed/p-logo2/40/40",
-        status: "In Transit",
-        driver: "Sunita Sharma",
-        driverAvatar: "https://picsum.photos/seed/driver2/100/100",
-        pickupTime: "Today, 6:00 PM",
-    },
-    {
-        id: "RES-NGO-003",
-        item: "Chicken Biryani",
-        provider: "Spicy Delights",
-        providerLogo: "https://picsum.photos/seed/p-logo4/40/40",
-        status: "Awaiting Pickup",
-        driver: "Priya Singh",
-        driverAvatar: "https://picsum.photos/seed/driver4/100/100",
-        pickupTime: "Today, 7:30 PM",
-    },
-];
-
-const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outline" | "success" => {
-    switch (status) {
-        case "Awaiting Pickup":
-            return "secondary";
-        case "Driver Assigned":
-            return "default";
-        case "In Transit":
-            return "outline";
-        case "Delivered":
-            return "success";
-        default:
-            return "secondary";
-    }
-}
 
 export default function ReservationsPage() {
+  const { reservations } = useAppContext();
+  const ngoName = "Helping Hands Foundation"; // Mocked for now
+
+  const ngoReservations = reservations.filter(r => r.ngo === ngoName);
+
   return (
     <Card>
       <CardHeader>
@@ -83,7 +43,7 @@ export default function ReservationsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {reservations.map((res) => (
+            {ngoReservations.map((res) => (
               <TableRow key={res.id}>
                 <TableCell className="font-medium">{res.item}</TableCell>
                 <TableCell>
@@ -95,10 +55,10 @@ export default function ReservationsPage() {
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={res.driverAvatar} alt={res.driver} />
-                      <AvatarFallback>{res.driver.charAt(0)}</AvatarFallback>
+                      <AvatarImage src={res.driverAvatar} alt={res.driverName} />
+                      <AvatarFallback>{res.driverName.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <span>{res.driver}</span>
+                    <span>{res.driverName}</span>
                   </div>
                 </TableCell>
                 <TableCell>{res.pickupTime}</TableCell>
@@ -107,6 +67,13 @@ export default function ReservationsPage() {
                 </TableCell>
               </TableRow>
             ))}
+             {ngoReservations.length === 0 && (
+                <TableRow>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                        You have no active reservations.
+                    </TableCell>
+                </TableRow>
+            )}
           </TableBody>
         </Table>
       </CardContent>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -11,6 +12,7 @@ import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { MultiSelect, type MultiSelectOption } from '@/components/ui/multi-select';
+import { format } from 'date-fns';
 
 function DriverScanner() {
     return (
@@ -33,8 +35,9 @@ function DriverScanner() {
 }
 
 export default function AssignDriverPage() {
-    const { lastOrder, setLastOrder, drivers } = useAppContext();
+    const { lastOrder, setLastOrder, drivers, addReservation } = useAppContext();
     const [isScanning, setIsScanning] = useState(true);
+    const [selectedDrivers, setSelectedDrivers] = useState<Record<string, string[]>>({});
     const router = useRouter();
     const { toast } = useToast();
 
@@ -57,6 +60,34 @@ export default function AssignDriverPage() {
     }, [lastOrder, router]);
     
     const handleConfirmAssignments = () => {
+        Object.entries(lastOrder).forEach(([providerName, orderGroup]) => {
+            orderGroup.items.forEach(item => {
+                const driverIds = selectedDrivers[providerName] || [];
+                // For this demo, we'll just assign the first selected driver.
+                // A real app might notify all and let the first accept.
+                const assignedDriver = drivers.find(d => d.id === driverIds[0]);
+
+                if (assignedDriver) {
+                    addReservation({
+                        id: `RES-${Date.now()}-${item.offer.id}`,
+                        item: item.offer.item,
+                        quantity: item.quantity,
+                        quantityUnit: item.offer.quantityUnit,
+                        provider: providerName,
+                        providerLogo: orderGroup.provider.logo,
+                        providerAddress: item.offer.location, // simplified
+                        providerContact: { name: 'Provider Contact', phone: '999-999-9999' },
+                        status: 'Awaiting Pickup',
+                        pickupTime: `Today, ${format(new Date(), 'p')}`, // Simplified
+                        ngo: 'Helping Hands Foundation', // Mocked
+                        ngoAddress: 'Jayanagar, Bangalore', // Mocked
+                        driverName: assignedDriver.name,
+                        driverAvatar: assignedDriver.avatar,
+                    });
+                }
+            });
+        });
+
         toast({
             title: "Drivers Notified!",
             description: "All selected drivers have been notified. The first to accept will be assigned the pickup.",
@@ -85,6 +116,10 @@ export default function AssignDriverPage() {
             </div>
         )
     }));
+    
+    const handleDriverSelection = (providerName: string, value: string[]) => {
+        setSelectedDrivers(prev => ({...prev, [providerName]: value}));
+    }
     
     const hasOrder = lastOrder && Object.keys(lastOrder).length > 0;
     
@@ -133,7 +168,7 @@ export default function AssignDriverPage() {
                                                 options={driverOptions}
                                                 placeholder="Select drivers to notify..."
                                                 emptyIndicator="No drivers available."
-                                                onValueChange={(value) => console.log(value)}
+                                                onValueChange={(value) => handleDriverSelection(provider.name, value)}
                                             />
                                         </div>
                                     </CardContent>
