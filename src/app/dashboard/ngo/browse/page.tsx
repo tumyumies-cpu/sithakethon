@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ListFilter, MapPin, ShoppingCart, Tag, Weight, Clock, Info, X } from "lucide-react";
+import { ListFilter, MapPin, ShoppingCart, Tag, Weight, Clock, Info } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
@@ -14,17 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Separator } from "@/components/ui/separator";
 import { useAppContext } from "@/context/app-context";
 import { useToast } from "@/hooks/use-toast";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import Link from "next/link";
 
 
 const initialOffers = [
@@ -55,6 +45,20 @@ const initialOffers = [
     quantityUnit: "kg",
     timeCooked: "Today, 12:00 PM",
     bestBefore: "Today, 10:00 PM",
+  },
+    {
+    id: "OFF-008",
+    item: "Leftover Sandwiches",
+    provider: "City Bakery",
+    location: "Koramangala, Bangalore",
+    providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
+    foodPhoto: "https://picsum.photos/seed/food8/600/400",
+    dietaryType: "non-veg",
+    category: "Bakery",
+    quantity: 15,
+    quantityUnit: "units",
+    timeCooked: "Today, 8:00 AM",
+    bestBefore: "Today, 9:00 PM",
   },
   {
     id: "OFF-006",
@@ -92,7 +96,6 @@ export default function BrowseOffersPage() {
     const [offers, setOffers] = useState(initialOffers);
     const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
     const [bookingQuantity, setBookingQuantity] = useState(1);
-    const [isCartOpen, setCartOpen] = useState(false);
 
     const { cart, setCart } = useAppContext();
     const { toast } = useToast();
@@ -124,36 +127,6 @@ export default function BrowseOffersPage() {
         });
         setSelectedOffer(null);
     }
-    
-    const handleRemoveFromCart = (offerId: string) => {
-        setCart(cart.filter(item => item.offer.id !== offerId));
-    };
-
-    const handleConfirmPickup = () => {
-        // Update the available quantity of the offers
-        const newOffers = offers.map(offer => {
-            const cartItem = cart.find(item => item.offer.id === offer.id);
-            if (cartItem) {
-                return { ...offer, quantity: offer.quantity - cartItem.quantity };
-            }
-            return offer;
-        }).filter(offer => offer.quantity > 0); // Remove offers that are fully booked
-
-        setOffers(newOffers);
-        
-        toast({
-            title: "Pickup Confirmed!",
-            description: "Drivers will be notified. You can track progress in 'My Reservations'.",
-        });
-
-        setCart([]);
-        setCartOpen(false);
-    }
-
-    const openCart = () => setCartOpen(true);
-    
-    const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
-    const totalItems = cart.length;
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -215,9 +188,11 @@ export default function BrowseOffersPage() {
             <div className="lg:col-span-3">
                  <div className="mb-4 flex justify-between items-center">
                     <p className="text-sm text-muted-foreground">Showing {offers.length} available offers</p>
-                    <Button variant="outline" onClick={openCart} disabled={cart.length === 0}>
-                        <ShoppingCart size={16} className="mr-2"/>
-                        View Cart ({cart.length})
+                    <Button asChild variant="outline" disabled={cart.length === 0}>
+                        <Link href="/dashboard/ngo/cart">
+                            <ShoppingCart size={16} className="mr-2"/>
+                            View Cart ({cart.length})
+                        </Link>
                     </Button>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -299,7 +274,7 @@ export default function BrowseOffersPage() {
                                 <Separator />
                                 <Button size="lg" className="w-full" onClick={handleAddToCart}>
                                     <ShoppingCart size={18} className="mr-2" />
-                                    Add to Cart & Book
+                                    Add to Cart
                                 </Button>
                                 <p className="text-xs text-center text-muted-foreground">
                                     You can add items from multiple providers to your cart before finalizing.
@@ -309,59 +284,7 @@ export default function BrowseOffersPage() {
                     </DialogContent>
                 </Dialog>
             )}
-
-            {/* Cart Dialog */}
-            <AlertDialog open={isCartOpen} onOpenChange={setCartOpen}>
-                <AlertDialogContent className="sm:max-w-4xl">
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className="text-2xl font-headline">Your Pickup Cart</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Review your items below. Once confirmed, we'll start assigning drivers.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="max-h-[60vh] overflow-y-auto pr-4">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Food Item</TableHead>
-                                    <TableHead>Provider</TableHead>
-                                    <TableHead>Quantity</TableHead>
-                                    <TableHead></TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {cart.map(({ offer, quantity }) => (
-                                    <TableRow key={offer.id}>
-                                        <TableCell className="font-medium">{offer.item}</TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center gap-2">
-                                                <Image src={offer.providerLogo} alt={offer.provider} width={24} height={24} className="rounded-full" />
-                                                <span>{offer.provider}</span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>{quantity} {offer.quantityUnit}</TableCell>
-                                        <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon" onClick={() => handleRemoveFromCart(offer.id)}>
-                                                <X className="h-4 w-4" />
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </div>
-                     <Separator />
-                     <div className="flex justify-between items-center font-medium">
-                        <span>Total Items: {totalItems}</span>
-                     </div>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Continue Browsing</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleConfirmPickup}>
-                            Confirm Pickup ({totalItems} items)
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
         </div>
     );
 }
+    

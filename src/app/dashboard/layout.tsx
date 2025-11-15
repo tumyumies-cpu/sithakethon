@@ -60,6 +60,7 @@ const navItems = {
   ngo: [
     { href: '/dashboard/ngo', label: 'Overview', icon: LayoutDashboard },
     { href: '/dashboard/ngo/browse', label: 'Browse Offers', icon: Search },
+    { href: '/dashboard/ngo/cart', label: 'Cart', icon: ShoppingCart },
     { href: '/dashboard/ngo/reservations', label: 'My Reservations', icon: BookMarked },
     { href: '/dashboard/ngo/history', label: 'History', icon: History },
   ],
@@ -88,7 +89,7 @@ const roleConfig = {
 
 function DashboardHeader() {
   const router = useRouter();
-  const { cart, setCart, currentRole, pageTitle, user, handleLogout } = useAppContext();
+  const { cart, currentRole, pageTitle, user, handleLogout } = useAppContext();
   
   const handleLogoutClick = () => {
     handleLogout();
@@ -103,12 +104,14 @@ function DashboardHeader() {
       </div>
       <div className="flex items-center gap-4">
         {currentRole === 'ngo' && (
-          <Button variant="ghost" size="icon" className="relative" onClick={() => alert(`Cart items: ${JSON.stringify(cart, null, 2)}`)}>
-            <ShoppingCart className="h-5 w-5" />
-            {cart.length > 0 && (
-              <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 justify-center rounded-full p-0 text-xs">{cart.length}</Badge>
-            )}
-            <span className="sr-only">Cart</span>
+          <Button variant="ghost" size="icon" className="relative" asChild>
+            <Link href="/dashboard/ngo/cart">
+              <ShoppingCart className="h-5 w-5" />
+              {cart.length > 0 && (
+                <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 justify-center rounded-full p-0 text-xs">{cart.length}</Badge>
+              )}
+              <span className="sr-only">Cart</span>
+            </Link>
           </Button>
         )}
         <Button variant="ghost" size="icon">
@@ -153,7 +156,7 @@ function DashboardHeader() {
 function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { currentRole, setCurrentRole, pageTitle, setPageTitle, handleLogout } = useAppContext();
+  const { currentRole, setCurrentRole, pageTitle, setPageTitle, cart } = useAppContext();
 
   useEffect(() => {
     const getRoleFromPath = (): keyof typeof roleConfig => {
@@ -169,15 +172,23 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
     };
     const role = getRoleFromPath();
     setCurrentRole(role);
-    setPageTitle(roleConfig[role].title);
+    const activeRoute = roleConfig[role].nav.find(item => item.href === pathname);
+    setPageTitle(activeRoute?.label || roleConfig[role].title);
   }, [pathname, setCurrentRole, setPageTitle]);
+  
+  const currentNavConfig = roleConfig[currentRole] || roleConfig.provider;
+  let currentNavItems = [...currentNavConfig.nav];
 
-  const { nav: currentNavItems } = roleConfig[currentRole] || roleConfig.provider;
+  if (currentRole === 'ngo') {
+    const cartItemIndex = currentNavItems.findIndex(item => item.href === '/dashboard/ngo/cart');
+    if (cartItemIndex !== -1) {
+      currentNavItems[cartItemIndex] = { 
+        ...currentNavItems[cartItemIndex], 
+        label: `Cart (${cart.length})`
+      };
+    }
+  }
 
-  const handleLogoutClick = () => {
-    handleLogout();
-    router.push('/login');
-  };
 
   return (
     <SidebarProvider>
@@ -236,3 +247,4 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     </AppProvider>
   );
 }
+    

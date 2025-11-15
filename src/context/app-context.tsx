@@ -12,7 +12,7 @@ const mockUser = {
 
 type Role = 'provider' | 'ngo' | 'driver' | 'admin';
 
-interface Offer {
+export interface Offer {
   id: string;
   item: string;
   provider: string;
@@ -26,7 +26,7 @@ interface Offer {
   bestBefore: string;
 }
 
-interface CartItem {
+export interface CartItem {
   offer: Offer;
   quantity: number;
 }
@@ -40,12 +40,89 @@ interface AppContextType {
   setPageTitle: React.Dispatch<React.SetStateAction<string>>;
   user: typeof mockUser;
   handleLogout: () => void;
+  offers: Offer[];
+  setOffers: React.Dispatch<React.SetStateAction<Offer[]>>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
+const initialOffers = [
+  {
+    id: "OFF-002",
+    item: "Surplus Bread & Pastries",
+    provider: "City Bakery",
+    location: "Koramangala, Bangalore",
+    providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
+    foodPhoto: "https://picsum.photos/seed/food1/600/400",
+    dietaryType: "veg",
+    category: "Bakery",
+    quantity: 10,
+    quantityUnit: "kg",
+    timeCooked: "Today, 6:00 AM",
+    bestBefore: "Today, 8:00 PM",
+  },
+  {
+    id: "OFF-005",
+    item: "Paneer Butter Masala",
+    provider: "The Grand Restaurant",
+    location: "Indiranagar, Bangalore",
+    providerLogo: "https://picsum.photos/seed/p-logo2/40/40",
+    foodPhoto: "https://picsum.photos/seed/food2/600/400",
+    dietaryType: "veg",
+    category: "Cooked",
+    quantity: 4,
+    quantityUnit: "kg",
+    timeCooked: "Today, 12:00 PM",
+    bestBefore: "Today, 10:00 PM",
+  },
+  {
+    id: "OFF-008",
+    item: "Leftover Sandwiches",
+    provider: "City Bakery",
+    location: "Koramangala, Bangalore",
+    providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
+    foodPhoto: "https://picsum.photos/seed/food8/600/400",
+    dietaryType: "non-veg",
+    category: "Bakery",
+    quantity: 15,
+    quantityUnit: "units",
+    timeCooked: "Today, 8:00 AM",
+    bestBefore: "Today, 9:00 PM",
+  },
+  {
+    id: "OFF-006",
+    item: "Fresh Vegetables",
+    provider: "Local Farm Co-op",
+    location: "HSR Layout, Bangalore",
+    providerLogo: "https://picsum.photos/seed/p-logo3/40/40",
+    foodPhoto: "https://picsum.photos/seed/food3/600/400",
+    dietaryType: "veg",
+    category: "Raw",
+    quantity: 25,
+    quantityUnit: "kg",
+    timeCooked: "N/A",
+    bestBefore: "In 2 days",
+  },
+  {
+    id: "OFF-007",
+    item: "Chicken Biryani",
+    provider: "Spicy Delights",
+    location: "Koramangala, Bangalore",
+    providerLogo: "https://picsum.photos/seed/p-logo4/40/40",
+    foodPhoto: "https://picsum.photos/seed/food4/600/400",
+    dietaryType: "non-veg",
+    category: "Cooked",
+    quantity: 8,
+    quantityUnit: "kg",
+    timeCooked: "Today, 1:00 PM",
+    bestBefore: "Today, 11:00 PM",
+  },
+];
+
+
 export function AppProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [offers, setOffers] = useState<Offer[]>(initialOffers as Offer[]);
   const [currentRole, setCurrentRole] = useState<Role>('provider');
   const [pageTitle, setPageTitle] = useState('Provider Dashboard');
 
@@ -73,7 +150,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AppContext.Provider value={{ cart, setCart, currentRole, setCurrentRole, pageTitle, setPageTitle, user: mockUser, handleLogout }}>
+    <AppContext.Provider value={{ cart, setCart, currentRole, setCurrentRole, pageTitle, setPageTitle, user: mockUser, handleLogout, offers, setOffers }}>
       {children}
     </AppContext.Provider>
   );
@@ -86,3 +163,4 @@ export function useAppContext() {
   }
   return context;
 }
+    
