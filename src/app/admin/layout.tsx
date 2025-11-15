@@ -23,6 +23,8 @@ import {
   LogOut,
   Bell,
   Wallet,
+  BarChart3,
+  ListOrdered
 } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -49,7 +51,9 @@ const navItems = [
     { href: '#', label: 'Users & Orgs', icon: Users },
     { href: '#', label: 'Verification', icon: ShieldCheck },
     { href: '#', label: 'Offers', icon: Package },
+    { href: '#', label: 'Orders', icon: ListOrdered },
     { href: '#', label: 'Tokens', icon: Wallet },
+    { href: '#', label: 'Analytics', icon: BarChart3 },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -125,7 +129,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </DropdownMenu>
           </div>
         </header>
-        <main className="flex-1 p-4 sm:p-6">
+        <main className="flex-1 p-4 sm:p-6 bg-muted/30">
             {children}
         </main>
       </SidebarInset>
