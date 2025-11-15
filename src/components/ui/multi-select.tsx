@@ -198,7 +198,7 @@ export const MultiSelect = React.forwardRef<
                       {option.icon && (
                         <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                       )}
-                      <span>{option.label}</span>
+                      {option.label}
                     </CommandItem>
                   );
                 })}
