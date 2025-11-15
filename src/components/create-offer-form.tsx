@@ -29,11 +29,13 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, Loader2, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { createOffer } from '@/app/dashboard/provider/actions';
+import { createOffer as createOfferAction } from '@/app/dashboard/provider/actions';
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Separator } from './ui/separator';
+import { useAppContext } from '@/context/app-context';
+import { Offer } from '@/context/app-context';
 
 const createOfferFormSchema = z.object({
   foodName: z.string().min(2, { message: 'Food name must be at least 2 characters.' }),
@@ -43,6 +45,7 @@ const createOfferFormSchema = z.object({
     (a) => parseFloat(z.string().parse(a)),
     z.number().positive({ message: 'Quantity must be a positive number.' })
   ),
+  quantityUnit: z.string().min(1, { message: 'Unit is required.' }),
   timeCooked: z.date({ required_error: 'Time cooked is required.' }),
   bestBefore: z.date({ required_error: 'A best before date is required.' }),
   foodCondition: z.string().min(1, { message: 'Food condition is required.' }),
@@ -58,6 +61,7 @@ type CreateOfferFormValues = z.infer<typeof createOfferFormSchema>;
 
 export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
   const { toast } = useToast();
+  const { addOffer, user } = useAppContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
@@ -66,12 +70,13 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
     defaultValues: {
       foodName: '',
       quantity: 0,
+      quantityUnit: 'kg',
       foodCondition: '',
-      pickupAddress: '',
-      landmark: '',
-      pickupTimeSlot: '',
-      contactPerson: '',
-      contactPhone: '',
+      pickupAddress: '123, TasteBuds Lane, Gourmet City',
+      landmark: 'Near Central Park',
+      pickupTimeSlot: '4:00 PM - 6:00 PM',
+      contactPerson: user.name,
+      contactPhone: '9876543210',
     },
   });
 
@@ -122,9 +127,26 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
         }
       });
       
-      const result = await createOffer(formData);
+      const result = await createOfferAction(formData);
 
       if (result.success) {
+         const newOffer: Offer = {
+          id: `OFF-${Date.now()}`,
+          item: data.foodName,
+          provider: "My Restaurant", // Replace with actual provider name
+          location: data.pickupAddress,
+          providerLogo: "https://picsum.photos/seed/my-restaurant/40/40",
+          foodPhoto: photoPreview || '',
+          dietaryType: data.dietaryType,
+          category: data.category,
+          quantity: data.quantity,
+          quantityUnit: data.quantityUnit,
+          timeCooked: format(data.timeCooked, 'p'),
+          bestBefore: format(data.bestBefore, 'p'),
+          status: 'Active',
+          createdAt: 'Just now'
+        };
+        addOffer(newOffer);
         toast({
           title: 'Offer Created Successfully!',
           description: `Your offer for "${data.foodName}" has been listed. AI confidence: ${result.aiCheck?.confidence.toFixed(2)}.`,

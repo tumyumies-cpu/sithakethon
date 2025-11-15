@@ -27,6 +27,8 @@ import {
 import { MoreHorizontal, PlusCircle, Package, Truck, CheckCircle2, Star } from "lucide-react";
 import { CreateOfferDialog } from "@/components/create-offer-dialog";
 import { useState } from "react";
+import { useAppContext } from "@/context/app-context";
+import { getStatusBadgeVariant } from "@/lib/utils";
 
 const summaryStats = [
   { title: "Active Offers", value: "5", icon: Package, change: "+2 from last week" },
@@ -35,61 +37,9 @@ const summaryStats = [
   { title: "Tokens Earned", value: "1,200", icon: Star, change: "+200 from last month" },
 ];
 
-const recentOffers = [
-  {
-    id: "OFF-001",
-    item: "Vegetable Biryani",
-    status: "Reserved",
-    weight: "5 kg",
-    expires: "in 2 hours",
-  },
-  {
-    id: "OFF-002",
-    item: "Surplus Bread & Pastries",
-    status: "Active",
-    weight: "10 kg",
-    expires: "in 8 hours",
-  },
-  {
-    id: "OFF-003",
-    item: "Mixed Dal & Rice",
-    status: "Picked Up",
-    weight: "8 kg",
-    expires: "Yesterday",
-  },
-    {
-    id: "OFF-004",
-    item: "Idli & Sambar",
-    status: "Delivered",
-    weight: "6 kg",
-    expires: "Yesterday",
-  },
-   {
-    id: "OFF-005",
-    item: "Paneer Butter Masala",
-    status: "Active",
-    weight: "4 kg",
-    expires: "in 12 hours",
-  },
-];
-
-const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outline" | "destructive" | "success" => {
-    switch (status) {
-        case "Active":
-            return "default"; // Primary color (e.g. green/teal)
-        case "Reserved":
-            return "secondary"; // Gray
-        case "Picked Up":
-            return "outline"; // Bordered
-        case "Delivered":
-            return "success"; // Custom success variant
-        default:
-            return "destructive";
-    }
-}
-
 export default function ProviderDashboardPage() {
   const [isCreateOfferOpen, setCreateOfferOpen] = useState(false);
+  const { offers } = useAppContext();
   
   return (
     <div className="space-y-6">
@@ -128,7 +78,7 @@ export default function ProviderDashboardPage() {
                 <TableRow>
                   <TableHead>Food Item</TableHead>
                   <TableHead className="hidden sm:table-cell">Status</TableHead>
-                  <TableHead className="hidden md:table-cell">Weight</TableHead>
+                  <TableHead className="hidden md:table-cell">Quantity</TableHead>
                   <TableHead className="hidden sm:table-cell">Expires</TableHead>
                   <TableHead>
                     <span className="sr-only">Actions</span>
@@ -136,14 +86,14 @@ export default function ProviderDashboardPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentOffers.map((offer) => (
+                {offers.slice(0, 5).map((offer) => (
                   <TableRow key={offer.id}>
                     <TableCell className="font-medium">{offer.item}</TableCell>
                     <TableCell className="hidden sm:table-cell">
                       <Badge variant={getStatusBadgeVariant(offer.status)}>{offer.status}</Badge>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">{offer.weight}</TableCell>
-                    <TableCell className="hidden sm:table-cell">{offer.expires}</TableCell>
+                    <TableCell className="hidden md:table-cell">{offer.quantity} {offer.quantityUnit}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{offer.bestBefore}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>

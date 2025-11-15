@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -12,88 +13,13 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { useAppContext } from "@/context/app-context";
+import { useAppContext, Offer } from "@/context/app-context";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
 
-const initialOffers = [
-  {
-    id: "OFF-002",
-    item: "Surplus Bread & Pastries",
-    provider: "City Bakery",
-    location: "Koramangala, Bangalore",
-    providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
-    foodPhoto: "https://picsum.photos/seed/food1/600/400",
-    dietaryType: "veg",
-    category: "Bakery",
-    quantity: 10,
-    quantityUnit: "kg",
-    timeCooked: "Today, 6:00 AM",
-    bestBefore: "Today, 8:00 PM",
-  },
-  {
-    id: "OFF-005",
-    item: "Paneer Butter Masala",
-    provider: "The Grand Restaurant",
-    location: "Indiranagar, Bangalore",
-    providerLogo: "https://picsum.photos/seed/p-logo2/40/40",
-    foodPhoto: "https://picsum.photos/seed/food2/600/400",
-    dietaryType: "veg",
-    category: "Cooked",
-    quantity: 4,
-    quantityUnit: "kg",
-    timeCooked: "Today, 12:00 PM",
-    bestBefore: "Today, 10:00 PM",
-  },
-    {
-    id: "OFF-008",
-    item: "Leftover Sandwiches",
-    provider: "City Bakery",
-    location: "Koramangala, Bangalore",
-    providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
-    foodPhoto: "https://picsum.photos/seed/food8/600/400",
-    dietaryType: "non-veg",
-    category: "Bakery",
-    quantity: 15,
-    quantityUnit: "units",
-    timeCooked: "Today, 8:00 AM",
-    bestBefore: "Today, 9:00 PM",
-  },
-  {
-    id: "OFF-006",
-    item: "Fresh Vegetables",
-    provider: "Local Farm Co-op",
-    location: "HSR Layout, Bangalore",
-    providerLogo: "https://picsum.photos/seed/p-logo3/40/40",
-    foodPhoto: "https://picsum.photos/seed/food3/600/400",
-    dietaryType: "veg",
-    category: "Raw",
-    quantity: 25,
-    quantityUnit: "kg",
-    timeCooked: "N/A",
-    bestBefore: "In 2 days",
-  },
-  {
-    id: "OFF-007",
-    item: "Chicken Biryani",
-    provider: "Spicy Delights",
-    location: "Koramangala, Bangalore",
-    providerLogo: "https://picsum.photos/seed/p-logo4/40/40",
-    foodPhoto: "https://picsum.photos/seed/food4/600/400",
-    dietaryType: "non-veg",
-    category: "Cooked",
-    quantity: 8,
-    quantityUnit: "kg",
-    timeCooked: "Today, 1:00 PM",
-    bestBefore: "Today, 11:00 PM",
-  },
-];
-
-type Offer = typeof initialOffers[0];
-
 export default function BrowseOffersPage() {
-    const [offers, setOffers] = useState(initialOffers);
+    const { offers } = useAppContext();
     const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
     const [bookingQuantity, setBookingQuantity] = useState(1);
 
@@ -287,4 +213,3 @@ export default function BrowseOffersPage() {
         </div>
     );
 }
-    

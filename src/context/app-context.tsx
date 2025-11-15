@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
@@ -19,12 +20,14 @@ export interface Offer {
   location: string;
   providerLogo: string;
   foodPhoto: string;
-  dietaryType: string;
-  category: string;
+  dietaryType: "veg" | "non-veg";
+  category: "cooked" | "raw" | "packaged" | "bakery" | "other";
   quantity: number;
   quantityUnit: string;
   timeCooked: string;
   bestBefore: string;
+  status: 'Active' | 'Reserved' | 'Picked Up' | 'Delivered' | 'Expired';
+  createdAt: string;
 }
 
 export interface CartItem {
@@ -41,7 +44,7 @@ export interface Driver {
     vehicleId: string;
 }
 
-type GroupedOrder = Record<string, { provider: { name: string; logo: string; location: string; }; items: CartItem[]; }>;
+export type GroupedOrder = Record<string, { provider: { name: string; logo: string; location: string; }; items: CartItem[]; }>;
 
 interface AppContextType {
   cart: CartItem[];
@@ -54,6 +57,7 @@ interface AppContextType {
   handleLogout: () => void;
   offers: Offer[];
   setOffers: React.Dispatch<React.SetStateAction<Offer[]>>;
+  addOffer: (offer: Offer) => void;
   lastOrder: GroupedOrder;
   setLastOrder: React.Dispatch<React.SetStateAction<GroupedOrder>>;
   drivers: Driver[];
@@ -62,7 +66,23 @@ interface AppContextType {
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const initialOffers = [
+const initialOffers: Offer[] = [
+  {
+    id: "OFF-001",
+    item: "Vegetable Biryani",
+    provider: "The Grand Restaurant",
+    location: "Indiranagar, Bangalore",
+    providerLogo: "https://picsum.photos/seed/p-logo2/40/40",
+    foodPhoto: "https://picsum.photos/seed/food2/600/400",
+    dietaryType: "veg",
+    category: "cooked",
+    quantity: 5,
+    quantityUnit: 'kg',
+    timeCooked: '2 hours ago',
+    bestBefore: "in 2 hours",
+    status: 'Reserved',
+    createdAt: '2 hours ago',
+  },
   {
     id: "OFF-002",
     item: "Surplus Bread & Pastries",
@@ -71,11 +91,13 @@ const initialOffers = [
     providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
     foodPhoto: "https://picsum.photos/seed/food1/600/400",
     dietaryType: "veg",
-    category: "Bakery",
+    category: "bakery",
     quantity: 10,
     quantityUnit: "kg",
     timeCooked: "Today, 6:00 AM",
     bestBefore: "Today, 8:00 PM",
+    status: 'Active',
+    createdAt: '6 hours ago',
   },
   {
     id: "OFF-005",
@@ -85,13 +107,15 @@ const initialOffers = [
     providerLogo: "https://picsum.photos/seed/p-logo2/40/40",
     foodPhoto: "https://picsum.photos/seed/food2/600/400",
     dietaryType: "veg",
-    category: "Cooked",
+    category: "cooked",
     quantity: 4,
     quantityUnit: "kg",
     timeCooked: "Today, 12:00 PM",
     bestBefore: "Today, 10:00 PM",
+    status: 'Active',
+    createdAt: '8 hours ago'
   },
-  {
+    {
     id: "OFF-008",
     item: "Leftover Sandwiches",
     provider: "City Bakery",
@@ -99,11 +123,13 @@ const initialOffers = [
     providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
     foodPhoto: "https://picsum.photos/seed/food8/600/400",
     dietaryType: "non-veg",
-    category: "Bakery",
+    category: "bakery",
     quantity: 15,
     quantityUnit: "units",
     timeCooked: "Today, 8:00 AM",
     bestBefore: "Today, 9:00 PM",
+    status: 'Active',
+    createdAt: '1 hour ago'
   },
   {
     id: "OFF-006",
@@ -113,11 +139,13 @@ const initialOffers = [
     providerLogo: "https://picsum.photos/seed/p-logo3/40/40",
     foodPhoto: "https://picsum.photos/seed/food3/600/400",
     dietaryType: "veg",
-    category: "Raw",
+    category: "raw",
     quantity: 25,
     quantityUnit: "kg",
     timeCooked: "N/A",
     bestBefore: "In 2 days",
+    status: 'Active',
+    createdAt: 'Yesterday'
   },
   {
     id: "OFF-007",
@@ -127,11 +155,13 @@ const initialOffers = [
     providerLogo: "https://picsum.photos/seed/p-logo4/40/40",
     foodPhoto: "https://picsum.photos/seed/food4/600/400",
     dietaryType: "non-veg",
-    category: "Cooked",
+    category: "cooked",
     quantity: 8,
     quantityUnit: "kg",
     timeCooked: "Today, 1:00 PM",
     bestBefore: "Today, 11:00 PM",
+    status: 'Active',
+    createdAt: '30 mins ago'
   },
 ];
 
@@ -144,7 +174,7 @@ const initialDrivers: Driver[] = [
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [offers, setOffers] = useState<Offer[]>(initialOffers as Offer[]);
+  const [offers, setOffers] = useState<Offer[]>(initialOffers);
   const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
   const [currentRole, setCurrentRole] = useState<Role>('provider');
   const [pageTitle, setPageTitle] = useState('Provider Dashboard');
@@ -154,6 +184,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('mockUserEmail');
     }
+  };
+
+  const addOffer = (offer: Offer) => {
+    setOffers(prevOffers => [offer, ...prevOffers]);
   };
 
   useEffect(() => {
@@ -180,6 +214,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     user: mockUser,
     handleLogout,
     offers, setOffers,
+    addOffer,
     lastOrder, setLastOrder,
     drivers, setDrivers
   };
