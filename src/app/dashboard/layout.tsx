@@ -49,9 +49,9 @@ const user = {
 const navItems = {
   provider: [
     { href: '/dashboard/provider', label: 'Overview', icon: LayoutDashboard },
-    { href: '#', label: 'My Offers', icon: Package },
-    { href: '#', label: 'Reservations', icon: BookMarked },
-    { href: '#', label: 'History', icon: History },
+    { href: '/dashboard/provider/my-offers', label: 'My Offers', icon: Package },
+    { href: '/dashboard/provider/reservations', label: 'Reservations', icon: BookMarked },
+    { href: '/dashboard/provider/history', label: 'History', icon: History },
   ],
   ngo: [
     { href: '/dashboard/ngo', label: 'Overview', icon: LayoutDashboard },
