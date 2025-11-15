@@ -24,6 +24,7 @@ import {
   User,
   Bell,
   Search,
+  ShoppingCart,
 } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -38,6 +39,7 @@ import {
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 
 // Mock user data. In a real app, this would come from an auth context.
 const user = {
@@ -95,7 +97,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       if (pathname.startsWith('/dashboard/driver')) return 'driver';
       
       // Fallback based on mock login
-      const mockEmail = localStorage.getItem('mockUserEmail');
+      const mockEmail = typeof window !== 'undefined' ? localStorage.getItem('mockUserEmail') : null;
       if (mockEmail?.includes('ngo')) return 'ngo';
       if (mockEmail?.includes('driver')) return 'driver';
       
@@ -105,22 +107,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [pathname]);
 
 
-  const { nav: currentNavItems, title: pageTitle } = roleConfig[currentRole];
+  const { nav: currentNavItems, title: pageTitle } = roleConfig[currentRole] || roleConfig.provider;
 
   const handleLogout = () => {
     // In a real app, you'd clear auth state here
-    localStorage.removeItem('mockUserEmail');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('mockUserEmail');
+    }
     router.push('/login');
   };
-  
-  useEffect(() => {
-    // This is a client-side check to determine the role.
-    // It's not perfectly robust but works for this mock setup.
-    const pathRole = pathname.split('/')[2] as keyof typeof roleConfig;
-    if (roleConfig[pathRole]) {
-      setCurrentRole(pathRole);
-    }
-  }, [pathname]);
 
   return (
     <SidebarProvider>
@@ -170,6 +165,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <h1 className="text-xl font-semibold font-headline">{pageTitle}</h1>
           </div>
           <div className="flex items-center gap-4">
+            {currentRole === 'ngo' && (
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="h-5 w-5" />
+                <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 justify-center rounded-full p-0 text-xs">3</Badge>
+                <span className="sr-only">Cart</span>
+              </Button>
+            )}
             <Button variant="ghost" size="icon">
               <Bell className="h-5 w-5" />
               <span className="sr-only">Notifications</span>
@@ -211,3 +213,5 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     </SidebarProvider>
   );
 }
+
+    
