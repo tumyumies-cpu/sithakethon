@@ -33,6 +33,7 @@ import { createOffer } from '@/app/dashboard/provider/actions';
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { Separator } from './ui/separator';
 
 const createOfferFormSchema = z.object({
   foodName: z.string().min(2, { message: 'Food name must be at least 2 characters.' }),
@@ -124,9 +125,9 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 pr-1">
         <div className="space-y-4">
-          <h4 className="font-medium">1. Food Details</h4>
+          <h4 className="font-medium text-lg">Food Details</h4>
           <FormField
             control={form.control}
             name="foodName"
@@ -134,13 +135,13 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
               <FormItem>
                 <FormLabel>Food Name / Type</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., Vegetable Biryani" {...field} />
+                  <Input placeholder="e.g., Vegetable Biryani, Chapati, Sandwiches" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="category"
@@ -150,7 +151,7 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select type" />
+                        <SelectValue placeholder="Select a food category" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -184,7 +185,7 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
               name="dietaryType"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel>Veg / Non-Veg</FormLabel>
+                  <FormLabel>Dietary Type</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -211,9 +212,11 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
             />
         </div>
 
+        <Separator />
+
         <div className="space-y-4">
-          <h4 className="font-medium">2. Safety & Time Information</h4>
-          <div className="grid grid-cols-2 gap-4">
+          <h4 className="font-medium text-lg">Safety & Time Information</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="timeCooked"
@@ -294,20 +297,22 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                   <FormControl>
                     <Input placeholder="e.g., Freshly cooked, well-packed" {...field} />
                   </FormControl>
+                   <FormDescription>
+                    Describe the condition of the food (e.g., hot, cold, packed).
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-        </div>
-
-        <div className="space-y-4">
-          <h4 className="font-medium">3. Photo</h4>
-          <FormField
+           <FormField
             control={form.control}
             name="photo"
             render={() => (
               <FormItem>
-                <FormLabel>Upload at least 1 photo</FormLabel>
+                <FormLabel>Food Photo</FormLabel>
+                 <FormDescription>
+                    Upload at least one clear photo of the food item.
+                  </FormDescription>
                 <FormControl>
                   <div className="relative">
                     <Input
@@ -317,13 +322,13 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                       onChange={handlePhotoChange}
                       {...photoRef}
                     />
-                    <div className="flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg text-muted-foreground">
+                    <div className="flex items-center justify-center w-full h-48 border-2 border-dashed rounded-lg text-muted-foreground bg-muted/50">
                       {photoPreview ? (
-                        <Image src={photoPreview} alt="Preview" width={100} height={100} className="object-contain h-full" />
+                        <Image src={photoPreview} alt="Preview" width={150} height={150} className="object-contain h-full p-2" />
                       ) : (
                         <div className="text-center">
                           <Upload className="mx-auto h-8 w-8" />
-                          <p>Click to upload a photo</p>
+                          <p>Click or drag to upload a photo</p>
                         </div>
                       )}
                     </div>
@@ -335,8 +340,10 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
           />
         </div>
 
+        <Separator />
+
         <div className="space-y-4">
-          <h4 className="font-medium">4. Pickup Details</h4>
+          <h4 className="font-medium text-lg">Pickup Details</h4>
            <FormField
             control={form.control}
             name="pickupAddress"
@@ -344,13 +351,13 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
               <FormItem>
                 <FormLabel>Pickup Address</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Full address for pickup" {...field} />
+                  <Textarea placeholder="Enter the full address for pickup" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="landmark"
@@ -371,14 +378,14 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                 <FormItem>
                   <FormLabel>Pickup Time Slot</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., 4 PM - 6 PM" {...field} />
+                    <Input placeholder="e.g., 4:00 PM - 6:00 PM" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="contactPerson"
@@ -386,7 +393,7 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                 <FormItem>
                   <FormLabel>Contact Person</FormLabel>
                   <FormControl>
-                    <Input placeholder="Name of person at pickup" {...field} />
+                    <Input placeholder="Name of person at pickup location" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -399,7 +406,7 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                 <FormItem>
                   <FormLabel>Contact Phone</FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="Phone number" {...field} />
+                    <Input type="tel" placeholder="Phone number for coordination" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -408,7 +415,7 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
           </div>
         </div>
 
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
+        <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Save and Create Offer
         </Button>
