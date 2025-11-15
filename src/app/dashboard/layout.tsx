@@ -61,7 +61,7 @@ const navItems = {
   ],
   driver: [
     { href: '/dashboard/driver', label: 'Overview', icon: LayoutDashboard },
-    { href: '/dashboard/driver/tasks', label: 'Available Tasks', icon: Package },
+    { href: '/dashboard/driver/tasks', label: 'Available Tasks', icon: Search },
     { href: '/dashboard/driver/pickups', label: 'My Pickups', icon: BookMarked },
     { href: '/dashboard/driver/history', label: 'History', icon: History },
   ],
@@ -162,6 +162,10 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
       const mockEmail = typeof window !== 'undefined' ? localStorage.getItem('mockUserEmail') : null;
       if (mockEmail?.includes('ngo')) return 'ngo';
       if (mockEmail?.includes('driver')) return 'driver';
+      if (mockEmail?.includes('admin')) {
+          router.push('/admin'); // Redirect if admin tries to access user dashboard
+          return 'provider'; // return a default
+      }
       
       return 'provider';
     };
@@ -176,10 +180,17 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
     let currentTitle = activeRoute?.label || roleConfig[role].title;
     if (pathname === '/dashboard/ngo/assign-driver') {
       currentTitle = 'Assign Drivers';
+    } else if (pathname === '/dashboard/provider') {
+        currentTitle = 'Provider Dashboard';
+    } else if (pathname === '/dashboard/ngo') {
+        currentTitle = 'NGO Dashboard';
+    } else if (pathname === '/dashboard/driver') {
+        currentTitle = 'Driver Dashboard';
     }
+
     setPageTitle(currentTitle);
 
-  }, [pathname, setCurrentRole, setPageTitle]);
+  }, [pathname, setCurrentRole, setPageTitle, router]);
   
   const currentNavConfig = roleConfig[currentRole] || roleConfig.provider;
   let currentNavItems = [...currentNavConfig.nav];

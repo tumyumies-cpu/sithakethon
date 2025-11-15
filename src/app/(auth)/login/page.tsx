@@ -35,7 +35,7 @@ export default function LoginPage() {
     }
 
     switch (email) {
-      case 'admin@gmail.com':
+      case 'admin@platepal.com':
         router.push('/admin');
         break;
       case 'restaurant@gmail.com':
