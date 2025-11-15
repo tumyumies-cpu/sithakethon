@@ -1,3 +1,5 @@
+'use client';
+
 import {
   SidebarProvider,
   Sidebar,
@@ -33,13 +35,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React from 'react';
 
 // Mock user data. In a real app, this would come from an auth context.
 const user = {
   name: 'Jane Doe',
   email: 'jane.doe@example.com',
   role: 'Provider',
-  avatar: 'https://picsum.photos/seed/user-avatar/100/100'
+  avatar: 'https://picsum.photos/seed/user-avatar/100/100',
 };
 
 const navItems = {
@@ -60,16 +64,37 @@ const navItems = {
     { href: '#', label: 'Available Tasks', icon: Package },
     { href: '#', label: 'My Pickups', icon: BookMarked },
     { href: '#', label: 'History', icon: History },
-  ]
-}
+  ],
+};
 
-// NOTE: In a real app, you would determine the user's role and render the appropriate nav items.
-// For this example, we'll default to the provider navigation.
-const currentNavItems = navItems.provider;
-const pageTitle = "Provider Dashboard";
-
+const roleConfig = {
+  provider: {
+    nav: navItems.provider,
+    title: 'Provider Dashboard',
+  },
+  ngo: {
+    nav: navItems.ngo,
+    title: 'NGO Dashboard',
+  },
+  driver: {
+    nav: navItems.driver,
+    title: 'Driver Dashboard',
+  },
+};
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  const getRoleFromPath = (): keyof typeof roleConfig => {
+    if (pathname.startsWith('/dashboard/provider')) return 'provider';
+    if (pathname.startsWith('/dashboard/ngo')) return 'ngo';
+    if (pathname.startsWith('/dashboard/driver')) return 'driver';
+    return 'provider'; // Default role
+  };
+
+  const role = getRoleFromPath();
+  const { nav: currentNavItems, title: pageTitle } = roleConfig[role];
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -91,27 +116,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-            <SidebarMenu>
-                <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Settings">
-                        <Link href="#"><Settings /><span>Settings</span></Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Support">
-                        <Link href="#"><LifeBuoy /><span>Support</span></Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Settings">
+                <Link href="#">
+                  <Settings />
+                  <span>Settings</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Support">
+                <Link href="#">
+                  <LifeBuoy />
+                  <span>Support</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
         <header className="flex h-16 items-center justify-between border-b px-4 sm:px-6">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="md:hidden" />
-            <h1 className="text-xl font-semibold font-headline">
-              {pageTitle}
-            </h1>
+            <h1 className="text-xl font-semibold font-headline">{pageTitle}</h1>
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon">
@@ -133,17 +162,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <div className="text-xs text-muted-foreground">{user.email}</div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem><User className="mr-2 h-4 w-4" /><span>Profile</span></DropdownMenuItem>
-                <DropdownMenuItem><Settings className="mr-2 h-4 w-4" /><span>Settings</span></DropdownMenuItem>
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem><LogOut className="mr-2 h-4 w-4" /><span>Log out</span></DropdownMenuItem>
+                <DropdownMenuItem>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </header>
-        <main className="flex-1 p-4 sm:p-6">
-            {children}
-        </main>
+        <main className="flex-1 p-4 sm:p-6">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
