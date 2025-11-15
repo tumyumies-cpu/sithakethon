@@ -90,8 +90,7 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
         setPhotoPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
-      form.setValue('photo', file);
-      form.trigger('photo');
+      form.setValue('photo', file, { shouldValidate: true });
     }
   };
   
@@ -366,7 +365,7 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
            <FormField
             control={form.control}
             name="photo"
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Food Photo</FormLabel>
                  <FormDescription>
@@ -376,10 +375,12 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                   <div className="relative">
                     <Input
                       type="file"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                       accept="image/*"
+                      name={photoRef.name}
+                      ref={photoRef.ref}
                       onChange={handlePhotoChange}
-                      {...photoRef}
+                      onBlur={photoRef.onBlur}
                     />
                     <div className="flex items-center justify-center w-full h-48 border-2 border-dashed rounded-lg text-muted-foreground bg-muted/50">
                       {photoPreview ? (
@@ -482,3 +483,5 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
     </Form>
   );
 }
+
+    
