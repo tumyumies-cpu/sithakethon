@@ -37,7 +37,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 // Mock admin data
 const adminUser = {
@@ -48,16 +48,17 @@ const adminUser = {
 
 const navItems = [
     { href: '/admin', label: 'Overview', icon: LayoutDashboard },
-    { href: '#', label: 'Users & Orgs', icon: Users },
-    { href: '#', label: 'Verification', icon: ShieldCheck },
-    { href: '#', label: 'Offers', icon: Package },
-    { href: '#', label: 'Orders', icon: ListOrdered },
-    { href: '#', label: 'Tokens', icon: Wallet },
-    { href: '#', label: 'Analytics', icon: BarChart3 },
+    { href: '/admin/users', label: 'Users & Orgs', icon: Users },
+    { href: '/admin/verification', label: 'Verification', icon: ShieldCheck },
+    { href: '/admin/offers', label: 'Offers', icon: Package },
+    { href: '/admin/orders', label: 'Orders', icon: ListOrdered },
+    { href: '/admin/tokens', label: 'Tokens', icon: Wallet },
+    { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = () => {
     // In a real app, you'd clear auth state here
@@ -74,7 +75,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.label}>
-                <SidebarMenuButton asChild tooltip={item.label}>
+                <SidebarMenuButton asChild tooltip={item.label} isActive={pathname === item.href}>
                   <Link href={item.href}>
                     <item.icon />
                     <span>{item.label}</span>
