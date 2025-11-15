@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
+import { AppProvider } from '@/context/app-context';
 
 export const metadata: Metadata = {
   title: 'PlatePal - Edible food should feed people — not landfills.',
@@ -24,7 +25,9 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        {children}
+        <AppProvider>
+            {children}
+        </AppProvider>
         <Toaster />
       </body>
     </html>

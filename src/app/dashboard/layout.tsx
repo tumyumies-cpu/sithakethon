@@ -40,6 +40,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { AppContext, AppProvider, useAppContext } from '@/context/app-context';
 
 // Mock user data. In a real app, this would come from an auth context.
 const user = {
@@ -85,35 +86,96 @@ const roleConfig = {
   },
 };
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+function DashboardHeader() {
+  const router = useRouter();
+  const { cart, setCart, currentRole, pageTitle, user, handleLogout } = useAppContext();
+  
+  const handleLogoutClick = () => {
+    handleLogout();
+    router.push('/login');
+  };
+
+  return (
+     <header className="flex h-16 items-center justify-between border-b px-4 sm:px-6">
+      <div className="flex items-center gap-2">
+        <SidebarTrigger className="md:hidden" />
+        <h1 className="text-xl font-semibold font-headline">{pageTitle}</h1>
+      </div>
+      <div className="flex items-center gap-4">
+        {currentRole === 'ngo' && (
+          <Button variant="ghost" size="icon" className="relative" onClick={() => alert(`Cart items: ${JSON.stringify(cart, null, 2)}`)}>
+            <ShoppingCart className="h-5 w-5" />
+            {cart.length > 0 && (
+              <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 justify-center rounded-full p-0 text-xs">{cart.length}</Badge>
+            )}
+            <span className="sr-only">Cart</span>
+          </Button>
+        )}
+        <Button variant="ghost" size="icon">
+          <Bell className="h-5 w-5" />
+          <span className="sr-only">Notifications</span>
+        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+              <Avatar>
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>
+              <div className="font-semibold">{user.name}</div>
+              <div className="text-xs text-muted-foreground">{user.email}</div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer">
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogoutClick} className="cursor-pointer">
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+  )
+}
+
+function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [currentRole, setCurrentRole] = useState<keyof typeof roleConfig>('provider');
+  const { currentRole, setCurrentRole, pageTitle, setPageTitle, handleLogout } = useAppContext();
 
   useEffect(() => {
     const getRoleFromPath = (): keyof typeof roleConfig => {
       if (pathname.startsWith('/dashboard/provider')) return 'provider';
       if (pathname.startsWith('/dashboard/ngo')) return 'ngo';
       if (pathname.startsWith('/dashboard/driver')) return 'driver';
-      
-      // Fallback based on mock login
+
       const mockEmail = typeof window !== 'undefined' ? localStorage.getItem('mockUserEmail') : null;
       if (mockEmail?.includes('ngo')) return 'ngo';
       if (mockEmail?.includes('driver')) return 'driver';
       
-      return 'provider'; // Default role
+      return 'provider';
     };
-    setCurrentRole(getRoleFromPath());
-  }, [pathname]);
+    const role = getRoleFromPath();
+    setCurrentRole(role);
+    setPageTitle(roleConfig[role].title);
+  }, [pathname, setCurrentRole, setPageTitle]);
 
+  const { nav: currentNavItems } = roleConfig[currentRole] || roleConfig.provider;
 
-  const { nav: currentNavItems, title: pageTitle } = roleConfig[currentRole] || roleConfig.provider;
-
-  const handleLogout = () => {
-    // In a real app, you'd clear auth state here
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('mockUserEmail');
-    }
+  const handleLogoutClick = () => {
+    handleLogout();
     router.push('/login');
   };
 
@@ -159,59 +221,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="flex h-16 items-center justify-between border-b px-4 sm:px-6">
-          <div className="flex items-center gap-2">
-            <SidebarTrigger className="md:hidden" />
-            <h1 className="text-xl font-semibold font-headline">{pageTitle}</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            {currentRole === 'ngo' && (
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart className="h-5 w-5" />
-                <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 justify-center rounded-full p-0 text-xs">3</Badge>
-                <span className="sr-only">Cart</span>
-              </Button>
-            )}
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
-              <span className="sr-only">Notifications</span>
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                  <Avatar>
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>
-                  <div className="font-semibold">{user.name}</div>
-                  <div className="text-xs text-muted-foreground">{user.email}</div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </header>
+        <DashboardHeader />
         <main className="flex-1 p-4 sm:p-6 bg-secondary/40">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
 }
 
-    
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AppProvider>
+      <DashboardLayoutContent>{children}</DashboardLayoutContent>
+    </AppProvider>
+  );
+}

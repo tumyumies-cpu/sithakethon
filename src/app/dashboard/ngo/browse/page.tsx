@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -8,14 +6,28 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ListFilter, MapPin, ShoppingCart, Tag, Weight, Clock, Info } from "lucide-react";
+import { ListFilter, MapPin, ShoppingCart, Tag, Weight, Clock, Info, X } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { useAppContext } from "@/context/app-context";
+import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-const offers = [
+
+const initialOffers = [
   {
     id: "OFF-002",
     item: "Surplus Bread & Pastries",
@@ -74,17 +86,74 @@ const offers = [
   },
 ];
 
-type Offer = typeof offers[0];
+type Offer = typeof initialOffers[0];
 
 export default function BrowseOffersPage() {
+    const [offers, setOffers] = useState(initialOffers);
     const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
     const [bookingQuantity, setBookingQuantity] = useState(1);
+    const [isCartOpen, setCartOpen] = useState(false);
+
+    const { cart, setCart } = useAppContext();
+    const { toast } = useToast();
 
     const handleBookingQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!selectedOffer) return;
         const value = Math.max(1, Math.min(selectedOffer.quantity, Number(e.target.value)));
         setBookingQuantity(value);
     }
+    
+    const handleAddToCart = () => {
+        if (!selectedOffer) return;
+
+        const existingCartItemIndex = cart.findIndex(item => item.offer.id === selectedOffer.id);
+        let newCart = [...cart];
+
+        if (existingCartItemIndex > -1) {
+            // Update quantity if item is already in cart
+            newCart[existingCartItemIndex].quantity = bookingQuantity;
+        } else {
+            // Add new item to cart
+            newCart.push({ offer: selectedOffer, quantity: bookingQuantity });
+        }
+
+        setCart(newCart);
+        toast({
+            title: "Item Added to Cart",
+            description: `${bookingQuantity} ${selectedOffer.quantityUnit} of ${selectedOffer.item} has been added.`,
+        });
+        setSelectedOffer(null);
+    }
+    
+    const handleRemoveFromCart = (offerId: string) => {
+        setCart(cart.filter(item => item.offer.id !== offerId));
+    };
+
+    const handleConfirmPickup = () => {
+        // Update the available quantity of the offers
+        const newOffers = offers.map(offer => {
+            const cartItem = cart.find(item => item.offer.id === offer.id);
+            if (cartItem) {
+                return { ...offer, quantity: offer.quantity - cartItem.quantity };
+            }
+            return offer;
+        }).filter(offer => offer.quantity > 0); // Remove offers that are fully booked
+
+        setOffers(newOffers);
+        
+        toast({
+            title: "Pickup Confirmed!",
+            description: "Drivers will be notified. You can track progress in 'My Reservations'.",
+        });
+
+        setCart([]);
+        setCartOpen(false);
+    }
+
+    const openCart = () => setCartOpen(true);
+    
+    const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
+    const totalItems = cart.length;
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -144,13 +213,17 @@ export default function BrowseOffersPage() {
 
             {/* Offers Grid */}
             <div className="lg:col-span-3">
-                 <div className="mb-4">
+                 <div className="mb-4 flex justify-between items-center">
                     <p className="text-sm text-muted-foreground">Showing {offers.length} available offers</p>
+                    <Button variant="outline" onClick={openCart} disabled={cart.length === 0}>
+                        <ShoppingCart size={16} className="mr-2"/>
+                        View Cart ({cart.length})
+                    </Button>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                     {offers.map(offer => (
                         <Card key={offer.id} className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                            <div className="relative w-full h-48 cursor-pointer" onClick={() => setSelectedOffer(offer)}>
+                            <div className="relative w-full h-48 cursor-pointer" onClick={() => { setSelectedOffer(offer); setBookingQuantity(1);}}>
                                 <Image src={offer.foodPhoto} alt={offer.item} fill objectFit="cover" className="transition-transform duration-300 group-hover:scale-105" />
                                 <Badge className={`absolute top-2 left-2 capitalize text-white ${offer.dietaryType === 'veg' ? 'bg-green-600' : 'bg-red-600'}`}>{offer.dietaryType}</Badge>
                             </div>
@@ -170,7 +243,7 @@ export default function BrowseOffersPage() {
                                 </div>
                             </CardContent>
                             <CardFooter className="flex-col items-start gap-2">
-                                <Button className="w-full" onClick={() => setSelectedOffer(offer)}>
+                                <Button className="w-full" onClick={() => { setSelectedOffer(offer); setBookingQuantity(1);}}>
                                     <ShoppingCart size={16} className="mr-2"/>
                                     Book Now
                                 </Button>
@@ -224,7 +297,7 @@ export default function BrowseOffersPage() {
                                     </div>
                                 </div>
                                 <Separator />
-                                <Button size="lg" className="w-full">
+                                <Button size="lg" className="w-full" onClick={handleAddToCart}>
                                     <ShoppingCart size={18} className="mr-2" />
                                     Add to Cart & Book
                                 </Button>
@@ -236,7 +309,59 @@ export default function BrowseOffersPage() {
                     </DialogContent>
                 </Dialog>
             )}
+
+            {/* Cart Dialog */}
+            <AlertDialog open={isCartOpen} onOpenChange={setCartOpen}>
+                <AlertDialogContent className="sm:max-w-4xl">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="text-2xl font-headline">Your Pickup Cart</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Review your items below. Once confirmed, we'll start assigning drivers.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="max-h-[60vh] overflow-y-auto pr-4">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Food Item</TableHead>
+                                    <TableHead>Provider</TableHead>
+                                    <TableHead>Quantity</TableHead>
+                                    <TableHead></TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {cart.map(({ offer, quantity }) => (
+                                    <TableRow key={offer.id}>
+                                        <TableCell className="font-medium">{offer.item}</TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center gap-2">
+                                                <Image src={offer.providerLogo} alt={offer.provider} width={24} height={24} className="rounded-full" />
+                                                <span>{offer.provider}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>{quantity} {offer.quantityUnit}</TableCell>
+                                        <TableCell className="text-right">
+                                            <Button variant="ghost" size="icon" onClick={() => handleRemoveFromCart(offer.id)}>
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                     <Separator />
+                     <div className="flex justify-between items-center font-medium">
+                        <span>Total Items: {totalItems}</span>
+                     </div>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Continue Browsing</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleConfirmPickup}>
+                            Confirm Pickup ({totalItems} items)
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
-    
