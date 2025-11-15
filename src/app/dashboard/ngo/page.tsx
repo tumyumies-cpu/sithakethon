@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, CheckCircle2, Package, Search, Truck } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useAppContext } from "@/context/app-context";
 
 const summaryStats = [
   { title: "Food Collected (Month)", value: "1,200 kg", icon: Package, change: "+150 kg from last month" },
@@ -29,37 +30,10 @@ const summaryStats = [
   { title: "Meals Served (est.)", value: "3,600", icon: CheckCircle2, change: "+450 from last month" },
 ];
 
-const recentOffers = [
-    {
-        id: "OFF-002",
-        item: "Surplus Bread & Pastries",
-        provider: "City Bakery",
-        providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
-        foodPhoto: "https://picsum.photos/seed/food1/600/400",
-        quantity: "10 kg",
-        bestBefore: "in 8 hours",
-    },
-    {
-        id: "OFF-005",
-        item: "Paneer Butter Masala",
-        provider: "The Grand Restaurant",
-        providerLogo: "https://picsum.photos/seed/p-logo2/40/40",
-        foodPhoto: "https://picsum.photos/seed/food2/600/400",
-        quantity: "4 kg",
-        bestBefore: "in 12 hours",
-    },
-    {
-        id: "OFF-006",
-        item: "Fresh Vegetables",
-        provider: "Local Farm Co-op",
-        providerLogo: "https://picsum.photos/seed/p-logo3/40/40",
-        foodPhoto: "https://picsum.photos/seed/food3/600/400",
-        quantity: "25 kg",
-        bestBefore: "in 2 days",
-    },
-];
-
 export default function NgoDashboardPage() {
+  const { offers } = useAppContext();
+  const recentOffers = offers.filter(offer => offer.status === 'Active').slice(0, 3);
+
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-3">
@@ -112,7 +86,7 @@ export default function NgoDashboardPage() {
                             <span>{offer.provider}</span>
                         </div>
                     </TableCell>
-                    <TableCell>{offer.quantity}</TableCell>
+                    <TableCell>{offer.quantity} {offer.quantityUnit}</TableCell>
                     <TableCell>{offer.bestBefore}</TableCell>
                   </TableRow>
                 ))}

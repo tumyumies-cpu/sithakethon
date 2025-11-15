@@ -19,11 +19,10 @@ import Link from "next/link";
 
 
 export default function BrowseOffersPage() {
-    const { offers } = useAppContext();
+    const { offers, cart, setCart } = useAppContext();
     const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
     const [bookingQuantity, setBookingQuantity] = useState(1);
 
-    const { cart, setCart } = useAppContext();
     const { toast } = useToast();
 
     const handleBookingQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,6 +52,8 @@ export default function BrowseOffersPage() {
         });
         setSelectedOffer(null);
     }
+    
+    const activeOffers = offers.filter(offer => offer.status === 'Active');
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -113,7 +114,7 @@ export default function BrowseOffersPage() {
             {/* Offers Grid */}
             <div className="lg:col-span-3">
                  <div className="mb-4 flex justify-between items-center">
-                    <p className="text-sm text-muted-foreground">Showing {offers.length} available offers</p>
+                    <p className="text-sm text-muted-foreground">Showing {activeOffers.length} available offers</p>
                     <Button asChild variant="outline" disabled={cart.length === 0}>
                         <Link href="/dashboard/ngo/cart">
                             <ShoppingCart size={16} className="mr-2"/>
@@ -122,7 +123,7 @@ export default function BrowseOffersPage() {
                     </Button>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {offers.map(offer => (
+                    {activeOffers.map(offer => (
                         <Card key={offer.id} className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-300">
                             <div className="relative w-full h-48 cursor-pointer" onClick={() => { setSelectedOffer(offer); setBookingQuantity(1);}}>
                                 <Image src={offer.foodPhoto} alt={offer.item} fill objectFit="cover" className="transition-transform duration-300 group-hover:scale-105" />
