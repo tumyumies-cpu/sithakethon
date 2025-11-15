@@ -5,30 +5,49 @@ import { z } from 'zod';
 import { checkFoodSpoilage } from '@/ai/flows/automated-photo-checks';
 
 const createOfferFormSchema = z.object({
-  foodItem: z.string(),
-  foodType: z.enum(['cooked', 'packaged', 'produce', 'other']),
-  weight: z.string(),
-  bestBefore: z.string(),
-  description: z.string().optional(),
-  photo: z.instanceof(File),
+  foodName: z.string().min(2, { message: 'Food name must be at least 2 characters.' }),
+  category: z.enum(['cooked', 'raw', 'packaged', 'bakery', 'other']),
+  dietaryType: z.enum(['veg', 'non-veg']),
+  quantity: z.string().min(1, { message: 'Please enter an estimated quantity.' }),
+  timeCooked: z.date({ required_error: 'Time cooked is required.' }),
+  bestBefore: z.date({ required_error: 'A best before date is required.' }),
+  foodCondition: z.string().min(1, { message: 'Food condition is required.' }),
+  photo: z.instanceof(File).refine(file => file.size > 0, 'Photo is required.'),
+  pickupAddress: z.string().min(5, { message: 'Pickup address is required.' }),
+  landmark: z.string().optional(),
+  pickupTimeSlot: z.string().min(3, { message: 'Pickup time slot is required.' }),
+  contactPerson: z.string().min(2, { message: 'Contact person name is required.' }),
+  contactPhone: z.string().min(10, { message: 'A valid phone number is required.' }),
 });
 
 export async function createOffer(formData: FormData) {
   try {
+    const photoFile = formData.get('photo');
+    const bestBeforeDate = formData.get('bestBefore');
+    const timeCookedDate = formData.get('timeCooked');
+
     const parsed = createOfferFormSchema.safeParse({
-      foodItem: formData.get('foodItem'),
-      foodType: formData.get('foodType'),
-      weight: formData.get('weight'),
-      bestBefore: formData.get('bestBefore'),
-      description: formData.get('description'),
-      photo: formData.get('photo'),
+      foodName: formData.get('foodName'),
+      category: formData.get('category'),
+      dietaryType: formData.get('dietaryType'),
+      quantity: formData.get('quantity'),
+      timeCooked: timeCookedDate ? new Date(timeCookedDate.toString()) : undefined,
+      bestBefore: bestBeforeDate ? new Date(bestBeforeDate.toString()) : undefined,
+      foodCondition: formData.get('foodCondition'),
+      photo: photoFile instanceof File ? photoFile : undefined,
+      pickupAddress: formData.get('pickupAddress'),
+      landmark: formData.get('landmark'),
+      pickupTimeSlot: formData.get('pickupTimeSlot'),
+      contactPerson: formData.get('contactPerson'),
+      contactPhone: formData.get('contactPhone'),
     });
 
     if (!parsed.success) {
+      console.error('Form validation failed:', parsed.error.flatten().fieldErrors);
       throw new Error('Invalid form data.');
     }
 
-    const { foodItem, foodType, weight, bestBefore, description, photo } = parsed.data;
+    const { photo, ...offerData } = parsed.data;
 
     // Convert image to data URI for the AI check
     const photoBuffer = await photo.arrayBuffer();
@@ -46,11 +65,7 @@ export async function createOffer(formData: FormData) {
 
     console.log('AI check passed. Creating offer...');
     console.log({
-      foodItem,
-      foodType,
-      weight,
-      bestBefore,
-      description,
+      ...offerData,
       photo: {
         name: photo.name,
         size: photo.size,
