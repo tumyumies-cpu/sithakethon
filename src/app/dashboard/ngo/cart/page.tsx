@@ -28,6 +28,8 @@ export default function CartPage() {
 
     const handleConfirmPickup = () => {
         setLastOrder(groupedByProvider);
+
+        // Navigate before clearing the cart
         router.push("/dashboard/ngo/assign-driver");
         
         toast({
@@ -77,7 +79,9 @@ export default function CartPage() {
         );
     }
     
-    const totalItems = cart.length;
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -143,7 +147,7 @@ export default function CartPage() {
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-muted-foreground">Total Items</span>
-                            <span className="font-semibold">{totalItems}</span>
+                            <span className="font-semibold">{cart.length}</span>
                         </div>
                         <Separator />
                         <p className="text-xs text-muted-foreground">

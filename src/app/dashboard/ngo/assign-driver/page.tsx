@@ -12,13 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 
-const mockDrivers = [
-  { id: 'DRV-01', name: 'Ravi Kumar', phone: '+91 98765 43210', avatar: 'https://picsum.photos/seed/driver1/100/100', distance: '2.1 km away', status: 'active' },
-  { id: 'DRV-02', name: 'Sunita Sharma', phone: '+91 98765 43211', avatar: 'https://picsum.photos/seed/driver2/100/100', distance: '3.5 km away', status: 'active' },
-  { id: 'DRV-03', name: 'Amit Patel', phone: '+91 98765 43212', avatar: 'https://picsum.photos/seed/driver3/100/100', distance: '4.8 km away', status: 'inactive' },
-  { id: 'DRV-04', name: 'Priya Singh', phone: '+91 98765 43213', avatar: 'https://picsum.photos/seed/driver4/100/100', distance: '6.2 km away', status: 'active' },
-];
-
 function DriverScanner() {
     return (
         <div className="flex flex-col items-center justify-center gap-4 text-center">
@@ -40,26 +33,28 @@ function DriverScanner() {
 }
 
 export default function AssignDriverPage() {
-    const { lastOrder, setLastOrder } = useAppContext();
+    const { lastOrder, setLastOrder, drivers } = useAppContext();
     const [isScanning, setIsScanning] = useState(true);
-    const [isOrderConfirmed, setIsOrderConfirmed] = useState(false);
     const router = useRouter();
     const { toast } = useToast();
 
+    // This effect ensures that we only show the page if there's an active order.
+    // It also handles the scanning animation.
     useEffect(() => {
         const hasOrder = lastOrder && Object.keys(lastOrder).length > 0;
         
-        if (hasOrder) {
-            setIsOrderConfirmed(true);
-            const scanTimeout = setTimeout(() => {
-                setIsScanning(false);
-            }, 3000);
-            return () => clearTimeout(scanTimeout);
-        } else if (!isScanning) {
-             router.replace('/dashboard/ngo/cart');
+        if (!hasOrder) {
+            router.replace('/dashboard/ngo/cart');
+            return;
         }
 
-    }, [lastOrder, router, isScanning]);
+        const scanTimeout = setTimeout(() => {
+            setIsScanning(false);
+        }, 3000);
+
+        return () => clearTimeout(scanTimeout);
+
+    }, [lastOrder, router]);
     
     const handleConfirmAssignments = () => {
         toast({
@@ -70,20 +65,16 @@ export default function AssignDriverPage() {
         router.push("/dashboard/ngo/reservations");
     }
 
-    const availableDrivers = mockDrivers.filter(d => d.status === 'active');
+    const availableDrivers = drivers
+        .filter(d => d.status === 'active')
+        .map(d => ({...d, distance: `${(Math.random() * 5 + 1).toFixed(1)} km away`})) // Add mock distance
+        .sort((a,b) => parseFloat(a.distance) - parseFloat(b.distance));
     
-    if (!isOrderConfirmed) {
-        return (
-            <Card>
-                <CardHeader>
-                    <CardTitle>Assign Drivers for Pickup</CardTitle>
-                    <CardDescription>Match available drivers to each restaurant pickup in your order.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                     <DriverScanner />
-                </CardContent>
-            </Card>
-        );
+    const hasOrder = lastOrder && Object.keys(lastOrder).length > 0;
+    
+    if (!hasOrder) {
+        // Render nothing or a loading spinner while redirecting
+        return null;
     }
 
 

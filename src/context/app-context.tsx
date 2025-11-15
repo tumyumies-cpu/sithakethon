@@ -32,6 +32,15 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface Driver {
+    id: string;
+    name: string;
+    phone: string;
+    avatar: string;
+    status: 'active' | 'inactive';
+    vehicleId: string;
+}
+
 type GroupedOrder = Record<string, { provider: { name: string; logo: string; location: string; }; items: CartItem[]; }>;
 
 interface AppContextType {
@@ -47,6 +56,8 @@ interface AppContextType {
   setOffers: React.Dispatch<React.SetStateAction<Offer[]>>;
   lastOrder: GroupedOrder;
   setLastOrder: React.Dispatch<React.SetStateAction<GroupedOrder>>;
+  drivers: Driver[];
+  setDrivers: React.Dispatch<React.SetStateAction<Driver[]>>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -124,10 +135,17 @@ const initialOffers = [
   },
 ];
 
+const initialDrivers: Driver[] = [
+  { id: 'DRV-01', name: 'Ravi Kumar', phone: '+91 98765 43210', avatar: 'https://picsum.photos/seed/driver1/100/100', vehicleId: 'KA 01 AB 1234', status: 'active' },
+  { id: 'DRV-02', name: 'Sunita Sharma', phone: '+91 98765 43211', avatar: 'https://picsum.photos/seed/driver2/100/100', vehicleId: 'MH 02 CD 5678', status: 'active' },
+  { id: 'DRV-03', name: 'Amit Patel', phone: '+91 98765 43212', avatar: 'https://picsum.photos/seed/driver3/100/100', vehicleId: 'GJ 03 EF 9012', status: 'inactive' },
+];
+
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [offers, setOffers] = useState<Offer[]>(initialOffers as Offer[]);
+  const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
   const [currentRole, setCurrentRole] = useState<Role>('provider');
   const [pageTitle, setPageTitle] = useState('Provider Dashboard');
   const [lastOrder, setLastOrder] = useState<GroupedOrder>({});
@@ -155,8 +173,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const contextValue = {
+    cart, setCart,
+    currentRole, setCurrentRole,
+    pageTitle, setPageTitle,
+    user: mockUser,
+    handleLogout,
+    offers, setOffers,
+    lastOrder, setLastOrder,
+    drivers, setDrivers
+  };
+
   return (
-    <AppContext.Provider value={{ cart, setCart, currentRole, setCurrentRole, pageTitle, setPageTitle, user: mockUser, handleLogout, offers, setOffers, lastOrder, setLastOrder }}>
+    <AppContext.Provider value={contextValue}>
       {children}
     </AppContext.Provider>
   );

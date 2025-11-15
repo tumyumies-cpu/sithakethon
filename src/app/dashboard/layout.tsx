@@ -26,6 +26,7 @@ import {
   Search,
   ShoppingCart,
   Truck,
+  Users,
 } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -55,6 +56,7 @@ const navItems = {
     { href: '/dashboard/ngo/browse', label: 'Browse Offers', icon: Search },
     { href: '/dashboard/ngo/cart', label: 'Cart', icon: ShoppingCart },
     { href: '/dashboard/ngo/reservations', label: 'My Reservations', icon: BookMarked },
+    { href: '/dashboard/ngo/drivers', label: 'Manage Drivers', icon: Users },
     { href: '/dashboard/ngo/history', label: 'History', icon: History },
   ],
   driver: [
