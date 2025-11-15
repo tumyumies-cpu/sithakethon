@@ -28,6 +28,12 @@ export default function LoginPage() {
 
     // This is a mock authentication system.
     // In a real application, you would validate credentials against a backend.
+    
+    // Store email to help dashboard layout determine role
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('mockUserEmail', email);
+    }
+
     switch (email) {
       case 'admin@gmail.com':
         router.push('/admin');

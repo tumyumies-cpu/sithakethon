@@ -23,6 +23,7 @@ import {
   LogOut,
   User,
   Bell,
+  Search,
 } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -55,15 +56,15 @@ const navItems = {
   ],
   ngo: [
     { href: '/dashboard/ngo', label: 'Overview', icon: LayoutDashboard },
-    { href: '#', label: 'Browse Offers', icon: Package },
-    { href: '#', label: 'My Reservations', icon: BookMarked },
-    { href: '#', label: 'History', icon: History },
+    { href: '/dashboard/ngo/browse', label: 'Browse Offers', icon: Search },
+    { href: '/dashboard/ngo/reservations', label: 'My Reservations', icon: BookMarked },
+    { href: '/dashboard/ngo/history', label: 'History', icon: History },
   ],
   driver: [
     { href: '/dashboard/driver', label: 'Overview', icon: LayoutDashboard },
-    { href: '#', label: 'Available Tasks', icon: Package },
-    { href: '#', label: 'My Pickups', icon: BookMarked },
-    { href: '#', label: 'History', icon: History },
+    { href: '/dashboard/driver/tasks', label: 'Available Tasks', icon: Package },
+    { href: '/dashboard/driver/pickups', label: 'My Pickups', icon: BookMarked },
+    { href: '/dashboard/driver/history', label: 'History', icon: History },
   ],
 };
 
@@ -92,6 +93,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       if (pathname.startsWith('/dashboard/provider')) return 'provider';
       if (pathname.startsWith('/dashboard/ngo')) return 'ngo';
       if (pathname.startsWith('/dashboard/driver')) return 'driver';
+      
+      // Fallback based on mock login
+      const mockEmail = localStorage.getItem('mockUserEmail');
+      if (mockEmail?.includes('ngo')) return 'ngo';
+      if (mockEmail?.includes('driver')) return 'driver';
+      
       return 'provider'; // Default role
     };
     setCurrentRole(getRoleFromPath());
@@ -102,8 +109,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const handleLogout = () => {
     // In a real app, you'd clear auth state here
+    localStorage.removeItem('mockUserEmail');
     router.push('/login');
   };
+  
+  useEffect(() => {
+    // This is a client-side check to determine the role.
+    // It's not perfectly robust but works for this mock setup.
+    const pathRole = pathname.split('/')[2] as keyof typeof roleConfig;
+    if (roleConfig[pathRole]) {
+      setCurrentRole(pathRole);
+    }
+  }, [pathname]);
 
   return (
     <SidebarProvider>
@@ -115,7 +132,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <SidebarMenu>
             {currentNavItems.map((item) => (
               <SidebarMenuItem key={item.label}>
-                <SidebarMenuButton asChild tooltip={item.label}>
+                <SidebarMenuButton asChild tooltip={item.label} isActive={pathname === item.href}>
                   <Link href={item.href}>
                     <item.icon />
                     <span>{item.label}</span>
@@ -189,7 +206,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </DropdownMenu>
           </div>
         </header>
-        <main className="flex-1 p-4 sm:p-6">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 bg-secondary/40">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
