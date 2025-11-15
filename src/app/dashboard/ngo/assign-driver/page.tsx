@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button';
 import { useAppContext } from '@/context/app-context';
 import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MapPin, Phone, Truck } from 'lucide-react';
+import { MapPin, Truck } from 'lucide-react';
 import Image from 'next/image';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import { MultiSelect, type MultiSelectOption } from '@/components/ui/multi-select';
 
 function DriverScanner() {
     return (
@@ -58,8 +58,8 @@ export default function AssignDriverPage() {
     
     const handleConfirmAssignments = () => {
         toast({
-            title: "Drivers Assigned!",
-            description: "All pickups have been assigned. You can track their progress in 'My Reservations'.",
+            title: "Drivers Notified!",
+            description: "All selected drivers have been notified. The first to accept will be assigned the pickup.",
         });
         setLastOrder({});
         router.push("/dashboard/ngo/reservations");
@@ -69,6 +69,22 @@ export default function AssignDriverPage() {
         .filter(d => d.status === 'active')
         .map(d => ({...d, distance: `${(Math.random() * 5 + 1).toFixed(1)} km away`})) // Add mock distance
         .sort((a,b) => parseFloat(a.distance) - parseFloat(b.distance));
+
+    const driverOptions: MultiSelectOption[] = availableDrivers.map(driver => ({
+        value: driver.id,
+        label: (
+            <div className="flex items-center gap-3">
+                <Avatar className="h-8 w-8">
+                    <AvatarImage src={driver.avatar} alt={driver.name} />
+                    <AvatarFallback>{driver.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div>
+                    <p className="font-medium">{driver.name}</p>
+                    <p className="text-xs text-muted-foreground">{driver.distance}</p>
+                </div>
+            </div>
+        )
+    }));
     
     const hasOrder = lastOrder && Object.keys(lastOrder).length > 0;
     
@@ -81,8 +97,8 @@ export default function AssignDriverPage() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Assign Drivers for Pickup</CardTitle>
-                <CardDescription>Match available drivers to each restaurant pickup in your order.</CardDescription>
+                <CardTitle>Notify Drivers for Pickup</CardTitle>
+                <CardDescription>Select one or more available drivers to notify for each pickup. The first driver to accept will get the task.</CardDescription>
             </CardHeader>
             <CardContent>
                 {isScanning ? (
@@ -112,28 +128,13 @@ export default function AssignDriverPage() {
                                         </div>
                                         <Separator className="my-4"/>
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium">Assign Driver</label>
-                                            <Select>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select a driver..." />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {availableDrivers.map(driver => (
-                                                        <SelectItem key={driver.id} value={driver.id}>
-                                                            <div className="flex items-center gap-3">
-                                                                <Avatar className="h-8 w-8">
-                                                                    <AvatarImage src={driver.avatar} alt={driver.name} />
-                                                                    <AvatarFallback>{driver.name.charAt(0)}</AvatarFallback>
-                                                                </Avatar>
-                                                                <div>
-                                                                    <p className="font-medium">{driver.name}</p>
-                                                                    <p className="text-xs text-muted-foreground">{driver.distance}</p>
-                                                                </div>
-                                                            </div>
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                            <label className="text-sm font-medium">Notify Drivers</label>
+                                            <MultiSelect
+                                                options={driverOptions}
+                                                placeholder="Select drivers to notify..."
+                                                emptyIndicator="No drivers available."
+                                                onValueChange={(value) => console.log(value)}
+                                            />
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -142,10 +143,11 @@ export default function AssignDriverPage() {
                         <div className="lg:col-span-1">
                              <Card className="sticky top-24">
                                 <CardHeader>
-                                    <CardTitle className="text-lg">Available Drivers</CardTitle>
+                                    <CardTitle className="text-lg">Summary</CardTitle>
+                                    <CardDescription>Confirm to send out notifications for all pickups.</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
-                                    {availableDrivers.map(driver => (
+                                    {availableDrivers.slice(0, 3).map(driver => (
                                         <div key={driver.id} className="flex items-center gap-4">
                                             <Avatar>
                                                 <AvatarImage src={driver.avatar} alt={driver.name} />
@@ -157,8 +159,9 @@ export default function AssignDriverPage() {
                                             </div>
                                         </div>
                                     ))}
+                                    {availableDrivers.length > 3 && <p className="text-sm text-muted-foreground">+ {availableDrivers.length-3} more drivers available</p>}
                                     <Separator />
-                                    <Button className="w-full" size="lg" onClick={handleConfirmAssignments}>Confirm Assignments</Button>
+                                    <Button className="w-full" size="lg" onClick={handleConfirmAssignments}>Confirm & Notify Drivers</Button>
                                 </CardContent>
                             </Card>
                         </div>
