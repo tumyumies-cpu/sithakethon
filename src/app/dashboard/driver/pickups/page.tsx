@@ -8,8 +8,22 @@ import { Separator } from "@/components/ui/separator";
 import { MapPin, Clock, Phone, ArrowRight, User, Package } from "lucide-react";
 import Image from "next/image";
 import Link from 'next/link';
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-const activePickups = [
+
+const initialPickups = [
     {
         id: "RES-NGO-002",
         item: "Paneer Butter Masala",
@@ -23,6 +37,8 @@ const activePickups = [
         ngoAddress: "456, 2nd Cross, Jayanagar, Bangalore"
     },
 ];
+
+type Pickup = typeof initialPickups[0];
 
 const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outline" | "success" => {
     switch (status) {
@@ -38,6 +54,32 @@ const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outli
 }
 
 export default function PickupsPage() {
+    const [activePickups, setActivePickups] = useState<Pickup[]>(initialPickups);
+    const { toast } = useToast();
+
+    const handleUpdateStatus = (pickupId: string, newStatus: "Picked Up" | "In Transit" | "Delivered") => {
+        const updatedPickups = activePickups.map(p => 
+            p.id === pickupId ? { ...p, status: newStatus } : p
+        );
+
+        if (newStatus === "Delivered") {
+            // In a real app, this item would move to a history table.
+            // For this demo, we'll filter it out from the active view.
+            setActivePickups(updatedPickups.filter(p => p.id !== pickupId));
+            toast({
+                title: "Delivery Confirmed!",
+                description: "The order has been marked as delivered. Great job!",
+            });
+        } else {
+            setActivePickups(updatedPickups);
+             toast({
+                title: `Status Updated: ${newStatus}`,
+                description: "The job status has been updated successfully.",
+            });
+        }
+    };
+
+
   return (
     <div className="space-y-6">
         <Card>
@@ -83,9 +125,29 @@ export default function PickupsPage() {
                     </CardContent>
                     <CardFooter className="flex-col sm:flex-row gap-2 justify-end bg-muted/50 p-4">
                         {pickup.status === "Awaiting Pickup" && <Button variant="outline">Navigate to Pickup</Button>}
-                        {pickup.status === "Awaiting Pickup" && <Button>Mark as Picked Up</Button>}
+                        {pickup.status === "Awaiting Pickup" && <Button onClick={() => handleUpdateStatus(pickup.id, 'Picked Up')}>Mark as Picked Up</Button>}
                         {pickup.status === "In Transit" && <Button variant="outline">Navigate to NGO</Button>}
-                        {pickup.status === "In Transit" && <Button>Mark as Delivered</Button>}
+                        {pickup.status === "In Transit" && (
+                             <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button>Mark as Delivered</Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                    <AlertDialogTitle>Confirm Delivery</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Please confirm that you have successfully delivered the items to the NGO. This action cannot be undone.
+                                    </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => handleUpdateStatus(pickup.id, 'Delivered')}>
+                                        Confirm
+                                    </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        )}
                     </CardFooter>
                 </Card>
                 ))
