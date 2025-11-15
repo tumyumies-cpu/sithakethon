@@ -14,7 +14,7 @@ const createOfferFormSchema = z.object({
   foodCondition: z.string().min(1, { message: 'Food condition is required.' }),
   photo: z.instanceof(File).refine(file => file.size > 0, 'Photo is required.'),
   pickupAddress: z.string().min(5, { message: 'Pickup address is required.' }),
-  landmark: z.string().optional(),
+  landmark: z.string().min(3, { message: 'Landmark is required.' }),
   pickupTimeSlot: z.string().min(3, { message: 'Pickup time slot is required.' }),
   contactPerson: z.string().min(2, { message: 'Contact person name is required.' }),
   contactPhone: z.string().min(10, { message: 'A valid phone number is required.' }),

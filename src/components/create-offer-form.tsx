@@ -39,13 +39,16 @@ const createOfferFormSchema = z.object({
   foodName: z.string().min(2, { message: 'Food name must be at least 2 characters.' }),
   category: z.enum(['cooked', 'raw', 'packaged', 'bakery', 'other'], { required_error: 'Please select a category.' }),
   dietaryType: z.enum(['veg', 'non-veg'], { required_error: 'Please select veg or non-veg.' }),
-  quantity: z.string().min(1, { message: 'Please enter an estimated quantity.' }),
+  quantity: z.preprocess(
+    (a) => parseFloat(z.string().parse(a)),
+    z.number().positive({ message: 'Quantity must be a positive number.' })
+  ),
   timeCooked: z.date({ required_error: 'Time cooked is required.' }),
   bestBefore: z.date({ required_error: 'A best before date is required.' }),
   foodCondition: z.string().min(1, { message: 'Food condition is required.' }),
   photo: z.any().refine(file => file instanceof File && file.size > 0, 'Photo is required.'),
   pickupAddress: z.string().min(5, { message: 'Pickup address is required.' }),
-  landmark: z.string().optional(),
+  landmark: z.string().min(3, { message: 'Landmark is required.' }),
   pickupTimeSlot: z.string().min(3, { message: 'Pickup time slot is required. e.g. 4 PM - 6 PM' }),
   contactPerson: z.string().min(2, { message: 'Contact person name is required.' }),
   contactPhone: z.string().min(10, { message: 'A valid phone number is required.' }),
@@ -62,7 +65,7 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
     resolver: zodResolver(createOfferFormSchema),
     defaultValues: {
       foodName: '',
-      quantity: '',
+      quantity: 0,
       foodCondition: '',
       pickupAddress: '',
       landmark: '',
@@ -86,6 +89,24 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
       form.trigger('photo');
     }
   };
+  
+  const handleDateChange = (field: any, date: Date | undefined) => {
+    if (!date) return;
+    const currentFieldValue = field.value || new Date();
+    currentFieldValue.setFullYear(date.getFullYear());
+    currentFieldValue.setMonth(date.getMonth());
+    currentFieldValue.setDate(date.getDate());
+    field.onChange(currentFieldValue);
+  };
+  
+  const handleTimeChange = (field: any, time: string) => {
+    const [hours, minutes] = time.split(':').map(Number);
+    const newDate = field.value || new Date();
+    newDate.setHours(hours);
+    newDate.setMinutes(minutes);
+    field.onChange(new Date(newDate));
+  };
+
 
   async function onSubmit(data: CreateOfferFormValues) {
     setIsSubmitting(true);
@@ -94,6 +115,8 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
       Object.entries(data).forEach(([key, value]) => {
         if (value instanceof Date) {
           formData.append(key, value.toISOString());
+        } else if(key === 'quantity') {
+          formData.append(key, String(value));
         } else if (value) {
           formData.append(key, value);
         }
@@ -171,9 +194,9 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
               name="quantity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Quantity</FormLabel>
+                  <FormLabel>Quantity (in kg)</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., 5 kg or 10 servings" {...field} />
+                    <Input type="number" placeholder="e.g., 5" {...field} onChange={e => field.onChange(e.target.value)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -229,12 +252,12 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                         <Button
                           variant={'outline'}
                           className={cn(
-                            'w-full pl-3 text-left font-normal',
+                            'w-full justify-start pl-3 text-left font-normal',
                             !field.value && 'text-muted-foreground'
                           )}
                         >
-                          {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? format(field.value, 'PPP p') : <span>Pick a date and time</span>}
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -242,10 +265,17 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(date) => handleDateChange(field, date)}
                         disabled={(date) => date > new Date() || date < new Date('2000-01-01')}
                         initialFocus
                       />
+                      <div className="p-3 border-t border-border">
+                        <Input 
+                          type="time"
+                          onChange={(e) => handleTimeChange(field, e.target.value)}
+                          defaultValue={field.value ? format(field.value, 'HH:mm') : ''}
+                        />
+                      </div>
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -264,12 +294,12 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                         <Button
                           variant={'outline'}
                           className={cn(
-                            'w-full pl-3 text-left font-normal',
+                            'w-full justify-start pl-3 text-left font-normal',
                             !field.value && 'text-muted-foreground'
                           )}
                         >
-                          {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? format(field.value, 'PPP p') : <span>Pick a date and time</span>}
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -277,10 +307,17 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(date) => handleDateChange(field, date)}
                         disabled={(date) => date < new Date()}
                         initialFocus
                       />
+                       <div className="p-3 border-t border-border">
+                        <Input 
+                          type="time"
+                          onChange={(e) => handleTimeChange(field, e.target.value)}
+                          defaultValue={field.value ? format(field.value, 'HH:mm') : ''}
+                        />
+                      </div>
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -363,7 +400,7 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
               name="landmark"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Landmark (Optional)</FormLabel>
+                  <FormLabel>Landmark</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g., Near City Mall" {...field} />
                   </FormControl>
