@@ -25,6 +25,7 @@ import {
   Bell,
   Search,
   ShoppingCart,
+  Truck,
 } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -41,14 +42,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { AppContext, AppProvider, useAppContext } from '@/context/app-context';
-
-// Mock user data. In a real app, this would come from an auth context.
-const user = {
-  name: 'Jane Doe',
-  email: 'jane.doe@example.com',
-  role: 'Provider',
-  avatar: 'https://picsum.photos/seed/user-avatar/100/100',
-};
 
 const navItems = {
   provider: [
@@ -170,10 +163,20 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
       
       return 'provider';
     };
-    const role = getRoleFromPath();
+    
+    let role = getRoleFromPath();
+    if(pathname.startsWith('/dashboard/ngo/assign-driver')) {
+        role = 'ngo';
+    }
+
     setCurrentRole(role);
     const activeRoute = roleConfig[role].nav.find(item => item.href === pathname);
-    setPageTitle(activeRoute?.label || roleConfig[role].title);
+    let currentTitle = activeRoute?.label || roleConfig[role].title;
+    if (pathname === '/dashboard/ngo/assign-driver') {
+      currentTitle = 'Assign Drivers';
+    }
+    setPageTitle(currentTitle);
+
   }, [pathname, setCurrentRole, setPageTitle]);
   
   const currentNavConfig = roleConfig[currentRole] || roleConfig.provider;
@@ -247,4 +250,3 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     </AppProvider>
   );
 }
-    

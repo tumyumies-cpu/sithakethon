@@ -16,6 +16,7 @@ export interface Offer {
   id: string;
   item: string;
   provider: string;
+  location: string;
   providerLogo: string;
   foodPhoto: string;
   dietaryType: string;
@@ -31,6 +32,8 @@ export interface CartItem {
   quantity: number;
 }
 
+type GroupedOrder = Record<string, { provider: { name: string; logo: string; location: string; }; items: CartItem[]; }>;
+
 interface AppContextType {
   cart: CartItem[];
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
@@ -42,6 +45,8 @@ interface AppContextType {
   handleLogout: () => void;
   offers: Offer[];
   setOffers: React.Dispatch<React.SetStateAction<Offer[]>>;
+  lastOrder: GroupedOrder;
+  setLastOrder: React.Dispatch<React.SetStateAction<GroupedOrder>>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -125,6 +130,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [offers, setOffers] = useState<Offer[]>(initialOffers as Offer[]);
   const [currentRole, setCurrentRole] = useState<Role>('provider');
   const [pageTitle, setPageTitle] = useState('Provider Dashboard');
+  const [lastOrder, setLastOrder] = useState<GroupedOrder>({});
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
@@ -150,7 +156,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AppContext.Provider value={{ cart, setCart, currentRole, setCurrentRole, pageTitle, setPageTitle, user: mockUser, handleLogout, offers, setOffers }}>
+    <AppContext.Provider value={{ cart, setCart, currentRole, setCurrentRole, pageTitle, setPageTitle, user: mockUser, handleLogout, offers, setOffers, lastOrder, setLastOrder }}>
       {children}
     </AppContext.Provider>
   );
@@ -163,4 +169,3 @@ export function useAppContext() {
   }
   return context;
 }
-    

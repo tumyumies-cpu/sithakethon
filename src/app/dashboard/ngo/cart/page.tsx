@@ -6,14 +6,14 @@ import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useAppContext } from "@/context/app-context";
 import { useToast } from "@/hooks/use-toast";
-import { MapPin, X, ArrowLeft, Building } from "lucide-react";
+import { MapPin, X, ArrowLeft, Building, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 export default function CartPage() {
-    const { cart, setCart, setOffers } = useAppContext();
+    const { cart, setCart, setLastOrder } = useAppContext();
     const { toast } = useToast();
     const router = useRouter();
 
@@ -27,21 +27,14 @@ export default function CartPage() {
     };
 
     const handleConfirmPickup = () => {
-        // This is where you would call a server action to create the reservations.
-        // For now, we'll just simulate it.
-
-        // We also need a way to update the original offers list on the browse page.
-        // This is a limitation of this simple context setup. A more robust state
-        // management solution like Redux or Zustand would be better.
-        // For now, we'll just show a success message and clear the cart.
-        
+        setLastOrder(groupedByProvider);
         toast({
             title: "Pickup Confirmed!",
-            description: "Drivers will be notified. You can track progress in 'My Reservations'.",
+            description: "Now, let's assign drivers for each pickup location.",
         });
 
         setCart([]);
-        router.push("/dashboard/ngo/reservations");
+        router.push("/dashboard/ngo/assign-driver");
     };
 
     const groupedByProvider = useMemo(() => {
@@ -157,7 +150,8 @@ export default function CartPage() {
                     </CardContent>
                     <CardFooter>
                         <Button className="w-full" size="lg" onClick={handleConfirmPickup}>
-                            Confirm Order & Assign Drivers
+                            <Truck className="mr-2 h-4 w-4" />
+                            Confirm & Assign Drivers
                         </Button>
                     </CardFooter>
                 </Card>
@@ -165,4 +159,3 @@ export default function CartPage() {
         </div>
     );
 }
-    
