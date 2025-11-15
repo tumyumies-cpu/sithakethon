@@ -28,6 +28,7 @@ import {
   ShoppingCart,
   Truck,
   Users,
+  BarChart3,
 } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -58,6 +59,7 @@ const navItems = {
     { href: '/dashboard/ngo/cart', label: 'Cart', icon: ShoppingCart },
     { href: '/dashboard/ngo/reservations', label: 'My Reservations', icon: BookMarked },
     { href: '/dashboard/ngo/drivers', label: 'Manage Drivers', icon: Users },
+    { href: '/dashboard/ngo/analytics', label: 'Analytics', icon: BarChart3 },
     { href: '/dashboard/ngo/history', label: 'History', icon: History },
   ],
   driver: [
@@ -259,6 +261,8 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-      <DashboardLayoutContent>{children}</DashboardLayoutContent>
+    <AppProvider>
+        <DashboardLayoutContent>{children}</DashboardLayoutContent>
+    </AppProvider>
   );
 }
