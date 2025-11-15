@@ -2,7 +2,6 @@
 'use server';
 
 import { z } from 'zod';
-import { checkFoodSpoilage } from '@/ai/flows/automated-photo-checks';
 
 const createOfferFormSchema = z.object({
   foodName: z.string().min(2, { message: 'Food name must be at least 2 characters.' }),
@@ -51,21 +50,7 @@ export async function createOffer(formData: FormData) {
 
     const { photo, ...offerData } = parsed.data;
 
-    // Convert image to data URI for the AI check
-    const photoBuffer = await photo.arrayBuffer();
-    const photoDataUri = `data:${photo.type};base64,${Buffer.from(photoBuffer).toString('base64')}`;
-
-    console.log('Running AI food spoilage check...');
-    const aiCheck = await checkFoodSpoilage({ photoDataUri });
-
-    if (aiCheck.isSpoiled && aiCheck.confidence > 0.75) {
-      return {
-        success: false,
-        error: `AI Flagged for Spoilage: ${aiCheck.reason} (Confidence: ${aiCheck.confidence.toFixed(2)})`,
-      };
-    }
-
-    console.log('AI check passed. Creating offer...');
+    console.log('Creating offer...');
     console.log({
       ...offerData,
       photo: {
@@ -73,13 +58,12 @@ export async function createOffer(formData: FormData) {
         size: photo.size,
         type: photo.type,
       },
-      aiCheck,
     });
     
     // In a real app, you would save this data to your database.
     // For now, we just log it and return success.
 
-    return { success: true, aiCheck };
+    return { success: true };
 
   } catch (error: any) {
     console.error('Failed to create offer:', error);

@@ -146,7 +146,7 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
         addOffer(newOffer);
         toast({
           title: 'Offer Created Successfully!',
-          description: `Your offer for "${data.foodName}" has been listed. AI confidence: ${result.aiCheck?.confidence.toFixed(2)}.`,
+          description: `Your offer for "${data.foodName}" has been listed.`,
         });
         onSuccess?.();
         form.reset();
@@ -478,7 +478,3 @@ export function CreateOfferForm({ onSuccess }: { onSuccess?: () => void }) {
     </Form>
   );
 }
-
-    
-
-    
