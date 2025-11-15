@@ -1,3 +1,6 @@
+
+'use client';
+
 import {
   Card,
   CardContent,
@@ -22,6 +25,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PlusCircle, Package, Truck, CheckCircle2, DollarSign } from "lucide-react";
+import { CreateOfferDialog } from "@/components/create-offer-dialog";
+import { useState } from "react";
 
 const summaryStats = [
   { title: "Active Offers", value: "5", icon: Package, change: "+2 from last week" },
@@ -84,6 +89,8 @@ const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outli
 }
 
 export default function ProviderDashboardPage() {
+  const [isCreateOfferOpen, setCreateOfferOpen] = useState(false);
+  
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -110,7 +117,7 @@ export default function ProviderDashboardPage() {
                 Manage your food surplus listings and view their status.
               </CardDescription>
             </div>
-            <Button>
+            <Button onClick={() => setCreateOfferOpen(true)}>
               <PlusCircle className="mr-2 h-4 w-4" />
               Create New Offer
             </Button>
@@ -159,6 +166,7 @@ export default function ProviderDashboardPage() {
           </CardContent>
         </Card>
       </div>
+      <CreateOfferDialog open={isCreateOfferOpen} onOpenChange={setCreateOfferOpen} />
     </div>
   );
 }
