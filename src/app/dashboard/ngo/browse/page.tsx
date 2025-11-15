@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Clock, ListFilter, MapPin, ShoppingCart, Tag, Weight } from "lucide-react";
 import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 const offers = [
   {
@@ -140,7 +142,7 @@ export default function BrowseOffersPage() {
                     <Card key={offer.id}>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div className="sm:col-span-1 relative">
-                                <Image src={offer.foodPhoto} alt={offer.item} layout="fill" objectFit="cover" className="rounded-l-lg" />
+                                <Image src={offer.foodPhoto} alt={offer.item} fill objectFit="cover" className="rounded-l-lg" />
                                 <Badge className={`absolute top-2 left-2 ${offer.dietaryType === 'veg' ? 'bg-green-500' : 'bg-red-500'} text-white`}>{offer.dietaryType}</Badge>
                             </div>
                             <div className="sm:col-span-2">
