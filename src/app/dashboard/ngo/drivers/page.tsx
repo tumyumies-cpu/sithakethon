@@ -8,13 +8,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { MoreHorizontal, PlusCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DriverFormDialog } from '@/components/driver-form-dialog';
@@ -41,10 +38,6 @@ export default function ManageDriversPage() {
     setDrivers(prev => prev.filter(d => d.id !== driverId));
   };
   
-  const handleToggleStatus = (driverId: string, currentStatus: 'active' | 'inactive') => {
-    setDrivers(prev => prev.map(d => d.id === driverId ? {...d, status: currentStatus === 'active' ? 'inactive' : 'active'} : d))
-  };
-
   const handleSaveDriver = (driverData: Driver) => {
     if (selectedDriver) {
       // Update existing driver
@@ -96,16 +89,9 @@ export default function ManageDriversPage() {
                   <TableCell>{driver.phone}</TableCell>
                   <TableCell>{driver.vehicleId}</TableCell>
                   <TableCell className='text-center'>
-                    <div className='flex flex-col items-center gap-1'>
-                        <Switch
-                            checked={driver.status === 'active'}
-                            onCheckedChange={() => handleToggleStatus(driver.id, driver.status)}
-                            aria-label="Toggle driver status"
-                        />
-                         <Badge variant={driver.status === 'active' ? 'success' : 'secondary'}>
-                            {driver.status}
-                        </Badge>
-                    </div>
+                    <Badge variant={driver.status === 'active' ? 'success' : 'secondary'}>
+                        {driver.status}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
