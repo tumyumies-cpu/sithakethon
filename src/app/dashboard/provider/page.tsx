@@ -24,7 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, PlusCircle, Package, Truck, CheckCircle2, DollarSign } from "lucide-react";
+import { MoreHorizontal, PlusCircle, Package, Truck, CheckCircle2, Star } from "lucide-react";
 import { CreateOfferDialog } from "@/components/create-offer-dialog";
 import { useState } from "react";
 
@@ -32,7 +32,7 @@ const summaryStats = [
   { title: "Active Offers", value: "5", icon: Package, change: "+2 from last week" },
   { title: "Upcoming Pickups", value: "3", icon: Truck, change: "+1 from last week" },
   { title: "Meals Donated (Month)", value: "450", icon: CheckCircle2, change: "+50 from last month" },
-  { title: "Tokens Earned", value: "1,200", icon: DollarSign, change: "+200 from last month" },
+  { title: "Tokens Earned", value: "1,200", icon: Star, change: "+200 from last month" },
 ];
 
 const recentOffers = [
@@ -73,16 +73,16 @@ const recentOffers = [
   },
 ];
 
-const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outline" | "destructive" => {
+const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outline" | "destructive" | "success" => {
     switch (status) {
         case "Active":
-            return "default";
+            return "default"; // Primary color (e.g. green/teal)
         case "Reserved":
-            return "secondary";
+            return "secondary"; // Gray
         case "Picked Up":
-            return "outline";
+            return "outline"; // Bordered
         case "Delivered":
-            return "default";
+            return "success"; // Custom success variant
         default:
             return "destructive";
     }
