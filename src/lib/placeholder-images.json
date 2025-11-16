@@ -2,69 +2,81 @@
   "placeholderImages": [
     {
       "id": "hero-background",
-      "description": "Volunteers sorting through food donations in a community center.",
-      "imageUrl": "https://images.unsplash.com/photo-1761666507437-9fb5a6ef7b0a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx2b2x1bnRlZXJzJTIwY29tbXVuaXR5fGVufDB8fHx8MTc2MzE3MzQ0Nnww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "volunteers community"
+      "description": "Hands holding a bowl of food, symbolizing donation and care.",
+      "imageUrl": "https://images.unsplash.com/photo-1593113646773-ae28c645340d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmb29kJTIwZG9uYXRpb258ZW58MHx8fHwxNzYzOTk0ODgxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "food donation"
     },
     {
       "id": "how-it-works-provider",
-      "description": "A restaurant chef packing surplus food into containers.",
-      "imageUrl": "https://images.unsplash.com/photo-1669572612523-0c3bc375eaf2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjaGVmJTIwZm9vZHxlbnwwfHx8fDE3NjMyMzc4NTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "chef food"
+      "description": "A close-up shot of a chef meticulously preparing a dish in a professional kitchen.",
+      "imageUrl": "https://images.unsplash.com/photo-1551218808-94e220e084d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjaGVmJTIwcGxhdGluZ3xlbnwwfHx8fDE3NjM5OTQ5ODV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chef plating"
     },
     {
       "id": "how-it-works-ngo",
-      "description": "An NGO worker organizing food packages for distribution.",
-      "imageUrl": "https://picsum.photos/seed/ngo-new/600/800",
-      "imageHint": "ngo worker"
+      "description": "Volunteers happily packing food donation boxes in a bright, organized facility.",
+      "imageUrl": "https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx2b2x1bnRlZXJzJTIwcGFja2luZyUyMGZvb2R8ZW58MHx8fHwxNzYzOTk1MDIxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "volunteers packing"
     },
     {
       "id": "how-it-works-driver",
-      "description": "A delivery driver loading boxes into a vehicle.",
-      "imageUrl": "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkZWxpdmVyeSUyMGRyaXZlcnxlbnwwfHx8fDE3NjMxODM1Mzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "description": "A friendly delivery driver smiling while holding a packed paper bag of groceries.",
+      "imageUrl": "https://images.unsplash.com/photo-1629828921937-12c510b3d712?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmcmllbmRseSUyMGRlbGl2ZXJ5JTIwZHJpdmVyfGVufDB8fHx8MTc2Mzk5NTA5Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "delivery driver"
     },
     {
       "id": "testimonial-1",
-      "description": "Headshot of a smiling person for a testimonial.",
-      "imageUrl": "https://images.unsplash.com/photo-1531123414780-f74242c2b052?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cGVyc29uJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzYzMjU2MDkxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "person portrait"
-    },
-    {
-      "id": "testimonial-2",
-      "description": "Headshot of another smiling person for a testimonial.",
-      "imageUrl": "https://images.unsplash.com/photo-1592621385612-4d7129426394?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzYzMTc1NDAwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "description": "Portrait of a smiling female cafe owner standing in her coffee shop.",
+      "imageUrl": "https://images.unsplash.com/photo-1554151228-14d9def656e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwb3J0cmFpdCUyMHNtaWxpbmd8ZW58MHx8fHwxNzYzOTk1MjMwfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "woman smiling"
     },
     {
-      "id": "testimonial-3",
-      "description": "Headshot of a third person for a testimonial.",
-      "imageUrl": "https://images.unsplash.com/photo-1607031542107-f6f46b5d54e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjMxOTUzOTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "id": "testimonial-2",
+      "description": "Portrait of a male NGO coordinator standing in front of a community center.",
+      "imageUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYWxlJTIwcHJvZmVzc2lvbmFsJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzYzOTk1MjYyfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "man portrait"
     },
     {
+      "id": "testimonial-3",
+      "description": "Portrait of a young, happy student volunteer.",
+      "imageUrl": "https://images.unsplash.com/photo-1628890923662-2cb23c2a02f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx5b3VuZyUyMHBlcnNvbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzYzOTk1MzI1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "young person"
+    },
+    {
       "id": "blog-1",
-      "description": "A vibrant photo of fresh produce at a market.",
-      "imageUrl": "https://images.unsplash.com/photo-1657288089316-c0350003ca49?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxmcmVzaCUyMHByb2R1Y2V8ZW58MHx8fHwxNzYzMTQ2NjA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "fresh produce"
+      "description": "A vibrant overhead shot of a community meal with diverse hands reaching for food.",
+      "imageUrl": "https://images.unsplash.com/photo-1517059779933-246d84f885f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxNXx8Y29tbXVuaXR5JTIwZm9vZHxlbnwwfHx8fDE3NjM5OTUzNzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "community food"
     },
     {
       "id": "blog-2",
-      "description": "A community gathering with people sharing food.",
-      "imageUrl": "https://images.unsplash.com/photo-1564758596018-3e5b1f2340cc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjb21tdW5pdHklMjBlYXRpbmd8ZW58MHx8fHwxNzYzMjM3ODUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "community eating"
+      "description": "Neatly packed food containers ready for donation.",
+      "imageUrl": "https://images.unsplash.com/photo-1594936312521-495280b271c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmb29kJTIwcGFja2FnaW5nfGVufDB8fHx8MTc2Mzk5NTQ1NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "food packaging"
     },
     {
       "id": "blog-3",
-      "description": "A close-up of a packed food donation box.",
-      "imageUrl": "https://images.unsplash.com/photo-1752606301489-ae8c109b23b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxkb25hdGlvbiUyMGJveHxlbnwwfHx8fDE3NjMyMzc4NTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "donation box"
+      "description": "A volunteer driver smiling from the driver's seat of a delivery van.",
+      "imageUrl": "https://images.unsplash.com/photo-1582451108226-52c522f228a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzbWlsaW5nJTIwZGVsaXZlcnklMjBkcml2ZXJ8ZW58MHx8fHwxNzYzOTk1NDg4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "driver smiling"
     },
     {
       "id": "feature-photo-check",
-      "description": "A smartphone scanning a piece of fruit.",
-      "imageUrl": "https://images.unsplash.com/photo-1705544363562-cdf94dd458cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwaG9uZSUyMHNjYW5uaW5nfGVufDB8fHx8MTc2MzI2MzExNHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "phone scanning"
+      "description": "A smartphone displaying a food quality analysis with AI icons.",
+      "imageUrl": "https://images.unsplash.com/photo-1674049406232-a3a8707122b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyMHx8YWklMjBmb29kJTIwYW5hbHlzaXN8ZW58MHx8fHwxNzYzOTk1NTQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ai food"
+    },
+    {
+      "id": "vegetable-biryani",
+      "description": "A delicious bowl of vegetable biryani.",
+      "imageUrl": "https://wily-aqua-4cusepxr4l.edgeone.app/vegetable-biryani.jpg",
+      "imageHint": "vegetable biryani"
+    },
+    {
+      "id": "bread-pastries",
+      "description": "A collection of various breads and pastries.",
+      "imageUrl": "/assets/bread-and-pastries.jpg",
+      "imageHint": "bread pastries"
     }
   ]
 }
