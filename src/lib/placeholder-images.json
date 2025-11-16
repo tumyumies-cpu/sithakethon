@@ -9,61 +9,61 @@
     {
       "id": "how-it-works-provider",
       "description": "A close-up shot of a chef meticulously preparing a dish in a professional kitchen.",
-      "imageUrl": "/assets/how-it-works-provider.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "chef plating"
     },
     {
       "id": "how-it-works-ngo",
       "description": "Volunteers happily packing food donation boxes in a bright, organized facility.",
-      "imageUrl": "/assets/how-it-works-ngo.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "volunteers packing"
     },
     {
       "id": "how-it-works-driver",
       "description": "A friendly delivery driver smiling while holding a packed paper bag of groceries.",
-      "imageUrl": "/assets/how-it-works-driver.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1627040632499-514554283c48?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "delivery driver"
     },
     {
       "id": "testimonial-1",
       "description": "Portrait of a smiling female cafe owner standing in her coffee shop.",
-      "imageUrl": "/assets/testimonial-1.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "woman smiling"
     },
     {
       "id": "testimonial-2",
       "description": "Portrait of a male NGO coordinator standing in front of a community center.",
-      "imageUrl": "/assets/testimonial-2.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "man portrait"
     },
     {
       "id": "testimonial-3",
       "description": "Portrait of a young, happy student volunteer.",
-      "imageUrl": "/assets/testimonial-3.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1618886614434-a4968c943568?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "young person"
     },
     {
       "id": "blog-1",
       "description": "A vibrant overhead shot of a community meal with diverse hands reaching for food.",
-      "imageUrl": "/assets/blog-1.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "community food"
     },
     {
       "id": "blog-2",
       "description": "Neatly packed food containers ready for donation.",
-      "imageUrl": "/assets/blog-2.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "food packaging"
     },
     {
       "id": "blog-3",
       "description": "A volunteer driver smiling from the driver's seat of a delivery van.",
-      "imageUrl": "/assets/blog-3.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1566633614725-11b3c588523b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "driver smiling"
     },
     {
       "id": "feature-photo-check",
       "description": "A smartphone displaying a food quality analysis with AI icons.",
-      "imageUrl": "/assets/feature-photo-check.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1683913444467-9d8381559441?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%D%D",
       "imageHint": "ai food"
     },
     {
@@ -75,7 +75,7 @@
     {
       "id": "bread-pastries",
       "description": "A collection of various breads and pastries.",
-      "imageUrl": "/assets/bread-and-pastries.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1563502871-925735853554?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "bread pastries"
     }
   ]
