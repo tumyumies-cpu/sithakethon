@@ -4,10 +4,14 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Medal, ShieldCheck } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+
+const heroImage = {
+    imageUrl: "https://images.unsplash.com/photo-1593113646773-ae28c645340d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmb29kJTIwZG9uYXRpb258ZW58MHx8fHwxNzYzOTk0ODgxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    description: "Hands holding a bowl of food, symbolizing donation and care.",
+    imageHint: "food donation"
+};
 
 export default function Hero() {
-  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-background');
 
   return (
     <section className="relative h-[90vh] min-h-[600px] w-full">

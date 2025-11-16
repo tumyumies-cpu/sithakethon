@@ -9,61 +9,61 @@
     {
       "id": "how-it-works-provider",
       "description": "A close-up shot of a chef meticulously preparing a dish in a professional kitchen.",
-      "imageUrl": "https://images.unsplash.com/photo-1551218808-94e220e084d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjaGVmJTIwcGxhdGluZ3xlbnwwfHx8fDE3NjM5OTQ5ODV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/how-it-works-provider.jpg",
       "imageHint": "chef plating"
     },
     {
       "id": "how-it-works-ngo",
       "description": "Volunteers happily packing food donation boxes in a bright, organized facility.",
-      "imageUrl": "https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx2b2x1bnRlZXJzJTIwcGFja2luZyUyMGZvb2R8ZW58MHx8fHwxNzYzOTk1MDIxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/how-it-works-ngo.jpg",
       "imageHint": "volunteers packing"
     },
     {
       "id": "how-it-works-driver",
       "description": "A friendly delivery driver smiling while holding a packed paper bag of groceries.",
-      "imageUrl": "https://images.unsplash.com/photo-1629828921937-12c510b3d712?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmcmllbmRseSUyMGRlbGl2ZXJ5JTIwZHJpdmVyfGVufDB8fHx8MTc2Mzk5NTA5Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/how-it-works-driver.jpg",
       "imageHint": "delivery driver"
     },
     {
       "id": "testimonial-1",
       "description": "Portrait of a smiling female cafe owner standing in her coffee shop.",
-      "imageUrl": "https://images.unsplash.com/photo-1554151228-14d9def656e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwb3J0cmFpdCUyMHNtaWxpbmd8ZW58MHx8fHwxNzYzOTk1MjMwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/testimonial-1.jpg",
       "imageHint": "woman smiling"
     },
     {
       "id": "testimonial-2",
       "description": "Portrait of a male NGO coordinator standing in front of a community center.",
-      "imageUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYWxlJTIwcHJvZmVzc2lvbmFsJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzYzOTk1MjYyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/testimonial-2.jpg",
       "imageHint": "man portrait"
     },
     {
       "id": "testimonial-3",
       "description": "Portrait of a young, happy student volunteer.",
-      "imageUrl": "https://images.unsplash.com/photo-1628890923662-2cb23c2a02f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx5b3VuZyUyMHBlcnNvbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzYzOTk1MzI1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/testimonial-3.jpg",
       "imageHint": "young person"
     },
     {
       "id": "blog-1",
       "description": "A vibrant overhead shot of a community meal with diverse hands reaching for food.",
-      "imageUrl": "https://images.unsplash.com/photo-1517059779933-246d84f885f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxNXx8Y29tbXVuaXR5JTIwZm9vZHxlbnwwfHx8fDE3NjM5OTUzNzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/blog-1.jpg",
       "imageHint": "community food"
     },
     {
       "id": "blog-2",
       "description": "Neatly packed food containers ready for donation.",
-      "imageUrl": "https://images.unsplash.com/photo-1594936312521-495280b271c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmb29kJTIwcGFja2FnaW5nfGVufDB8fHx8MTc2Mzk5NTQ1NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/blog-2.jpg",
       "imageHint": "food packaging"
     },
     {
       "id": "blog-3",
       "description": "A volunteer driver smiling from the driver's seat of a delivery van.",
-      "imageUrl": "https://images.unsplash.com/photo-1582451108226-52c522f228a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzbWlsaW5nJTIwZGVsaXZlcnklMjBkcml2ZXJ8ZW58MHx8fHwxNzYzOTk1NDg4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/blog-3.jpg",
       "imageHint": "driver smiling"
     },
     {
       "id": "feature-photo-check",
       "description": "A smartphone displaying a food quality analysis with AI icons.",
-      "imageUrl": "https://images.unsplash.com/photo-1674049406232-a3a8707122b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyMHx8YWklMjBmb29kJTIwYW5hbHlzaXN8ZW58MHx8fHwxNzYzOTk1NTQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/feature-photo-check.jpg",
       "imageHint": "ai food"
     },
     {
