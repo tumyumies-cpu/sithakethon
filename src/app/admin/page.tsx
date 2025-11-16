@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
 
 const summaryStats = [
   { title: "Total Providers", value: "85", icon: Utensils, change: "+5 this week" },
@@ -21,14 +22,14 @@ const summaryStats = [
   { title: "Food Rescued (KG)", value: "12,500", icon: Package, change: "+800kg this week" },
 ];
 
-const chartData = [
-  { date: "Mon", total: Math.floor(Math.random() * 200) + 100 },
-  { date: "Tue", total: Math.floor(Math.random() * 200) + 100 },
-  { date: "Wed", total: Math.floor(Math.random() * 200) + 100 },
-  { date: "Thu", total: Math.floor(Math.random() * 200) + 100 },
-  { date: "Fri", total: Math.floor(Math.random() * 200) + 100 },
-  { date: "Sat", total: Math.floor(Math.random() * 200) + 100 },
-  { date: "Sun", total: Math.floor(Math.random() * 200) + 100 },
+const initialChartData = [
+  { date: "Mon", total: 0 },
+  { date: "Tue", total: 0 },
+  { date: "Wed", total: 0 },
+  { date: "Thu", total: 0 },
+  { date: "Fri", total: 0 },
+  { date: "Sat", total: 0 },
+  { date: "Sun", total: 0 },
 ];
 
 const recentActivity = [
@@ -50,6 +51,12 @@ const getBadgeVariantForActivity = (type: string) => {
 
 
 export default function AdminPage() {
+  const [chartData, setChartData] = useState(initialChartData);
+
+  useEffect(() => {
+    setChartData(initialChartData.map(d => ({...d, total: Math.floor(Math.random() * 200) + 100})));
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

@@ -1,14 +1,20 @@
 
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Medal, ShieldCheck } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-
-const heroImage = PlaceHolderImages.find(img => img.id === 'hero-background');
+import { useEffect, useState } from 'react';
+import { ImagePlaceholder } from '@/lib/placeholder-images';
 
 export default function Hero() {
+  const [heroImage, setHeroImage] = useState<ImagePlaceholder | undefined>(undefined);
+
+  useEffect(() => {
+    // Find image on client to avoid server/client mismatch
+    setHeroImage(PlaceHolderImages.find(img => img.id === 'hero-background'));
+  }, []);
 
   return (
     <section className="relative h-[90vh] min-h-[600px] w-full">

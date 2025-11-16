@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
 import { addDays, format } from "date-fns";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Image from "next/image";
@@ -21,14 +21,14 @@ const summaryStats = [
   { title: "Completed Pickup Trips", value: "62", icon: Truck, change: "+8 this month" },
 ];
 
-const foodCollectionData = [
-  { date: "Mon", total: Math.floor(Math.random() * 50) + 20 },
-  { date: "Tue", total: Math.floor(Math.random() * 50) + 20 },
-  { date: "Wed", total: Math.floor(Math.random() * 50) + 20 },
-  { date: "Thu", total: Math.floor(Math.random() * 50) + 20 },
-  { date: "Fri", total: Math.floor(Math.random() * 50) + 20 },
-  { date: "Sat", total: Math.floor(Math.random() * 50) + 20 },
-  { date: "Sun", total: Math.floor(Math.random() * 50) + 20 },
+const initialFoodCollectionData = [
+  { date: "Mon", total: 0 },
+  { date: "Tue", total: 0 },
+  { date: "Wed", total: 0 },
+  { date: "Thu", total: 0 },
+  { date: "Fri", total: 0 },
+  { date: "Sat", total: 0 },
+  { date: "Sun", total: 0 },
 ];
 
 const categoryData = [
@@ -58,6 +58,11 @@ export default function AnalyticsPage() {
     from: new Date(2024, 0, 20),
     to: addDays(new Date(2024, 0, 20), 20),
   });
+  const [foodCollectionData, setFoodCollectionData] = useState(initialFoodCollectionData);
+
+  useEffect(() => {
+    setFoodCollectionData(initialFoodCollectionData.map(d => ({ ...d, total: Math.floor(Math.random() * 50) + 20 })));
+  }, []);
 
   const renderCustomizedLabel = (props: any) => {
     const { cx, cy, midAngle, outerRadius, fill, percent, name } = props;
