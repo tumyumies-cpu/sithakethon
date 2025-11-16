@@ -226,14 +226,84 @@ const initialDrivers: Driver[] = [
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [offers, setOffers] = useState<Offer[]>(initialOffers);
-  const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
   const [pendingOrder, setPendingOrder] = useState<GroupedOrder | null>(null);
   const [currentRole, setCurrentRole] = useState<Role>('provider');
   const [pageTitle, setPageTitle] = useState('Provider Dashboard');
+
+  const [offers, setOffers] = useState<Offer[]>(() => {
+    if (typeof window === 'undefined') return initialOffers;
+    try {
+      const saved = localStorage.getItem('offers');
+      return saved ? JSON.parse(saved) : initialOffers;
+    } catch (error) {
+      console.error("Failed to parse offers from localStorage", error);
+      return initialOffers;
+    }
+  });
+
+  const [drivers, setDrivers] = useState<Driver[]>(() => {
+    if (typeof window === 'undefined') return initialDrivers;
+    try {
+      const saved = localStorage.getItem('drivers');
+      return saved ? JSON.parse(saved) : initialDrivers;
+    } catch (error) {
+      console.error("Failed to parse drivers from localStorage", error);
+      return initialDrivers;
+    }
+  });
+
+  const [history, setHistory] = useState<HistoryEntry[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const saved = localStorage.getItem('history');
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error("Failed to parse history from localStorage", error);
+      return [];
+    }
+  });
+
+  const [reservations, setReservations] = useState<Reservation[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const saved = localStorage.getItem('reservations');
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error("Failed to parse reservations from localStorage", error);
+      return [];
+    }
+  });
+
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const saved = localStorage.getItem('tasks');
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error("Failed to parse tasks from localStorage", error);
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('offers', JSON.stringify(offers));
+  }, [offers]);
+
+  useEffect(() => {
+    localStorage.setItem('drivers', JSON.stringify(drivers));
+  }, [drivers]);
+
+  useEffect(() => {
+    localStorage.setItem('history', JSON.stringify(history));
+  }, [history]);
+
+  useEffect(() => {
+    localStorage.setItem('reservations', JSON.stringify(reservations));
+  }, [reservations]);
+  
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
