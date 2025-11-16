@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,6 +23,7 @@ import { CreditCard, Heart, Loader2, User, Mail } from 'lucide-react';
 import React from 'react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 const donationSchema = z.object({
   name: z.string().min(2, { message: 'Please enter your name.' }),
@@ -38,7 +40,6 @@ export default function DonatePage() {
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [customAmount, setCustomAmount] = React.useState('');
   const [selectedAmount, setSelectedAmount] = React.useState('200');
 
   const form = useForm<DonationFormValues>({
@@ -53,18 +54,24 @@ export default function DonatePage() {
   const handleAmountChange = (value: string) => {
     setSelectedAmount(value);
     if (value !== 'custom') {
-        setCustomAmount('');
-        form.setValue('amount', value);
-    } else {
-        form.setValue('amount', customAmount);
+      form.setValue('amount', value, { shouldValidate: true });
     }
-  }
+  };
 
   const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setCustomAmount(value);
-      form.setValue('amount', value);
-  }
+    const value = e.target.value;
+    form.setValue('amount', value, { shouldValidate: true });
+  };
+  
+  React.useEffect(() => {
+    if (selectedAmount !== 'custom') {
+      form.setValue('amount', selectedAmount, { shouldValidate: true });
+    } else {
+       // Let the custom input handle the value
+       form.setValue('amount', form.getValues('amount') || '', { shouldValidate: true });
+    }
+  }, [selectedAmount, form]);
+
 
   async function onSubmit(data: DonationFormValues) {
     setIsSubmitting(true);
@@ -81,11 +88,6 @@ export default function DonatePage() {
     router.push('/');
     setIsSubmitting(false);
   }
-  
-  const getButtonVariant = (value: string) => {
-      return selectedAmount === value ? 'default' : 'outline';
-  }
-
 
   return (
     <div className="container py-12 md:py-16">
@@ -102,65 +104,61 @@ export default function DonatePage() {
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 
-                <div className="space-y-4">
-                  <h4 className="font-medium text-lg">Choose an Amount</h4>
-                  <FormField
-                    control={form.control}
-                    name="amount"
-                    render={() => (
-                      <FormItem className="space-y-3">
-                        <FormControl>
-                          <RadioGroup
-                            onValueChange={handleAmountChange}
-                            value={selectedAmount}
-                            className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+                <FormField
+                  control={form.control}
+                  name="amount"
+                  render={() => (
+                    <FormItem className="space-y-4">
+                      <FormLabel className="text-lg font-medium">Choose an Amount</FormLabel>
+                      <FormControl>
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                          {['200', '500', '1000'].map((value) => (
+                            <button
+                              type="button"
+                              key={value}
+                              onClick={() => handleAmountChange(value)}
+                              className={cn(
+                                "flex flex-col items-center justify-between rounded-md border-2 p-4 cursor-pointer transition-colors",
+                                selectedAmount === value
+                                  ? "border-primary bg-primary/10"
+                                  : "border-muted bg-popover hover:bg-accent hover:text-accent-foreground"
+                              )}
+                            >
+                              ₹{value}
+                            </button>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={() => handleAmountChange('custom')}
+                            className={cn(
+                              "flex flex-col items-center justify-between rounded-md border-2 p-4 cursor-pointer transition-colors",
+                              selectedAmount === 'custom'
+                                ? "border-primary bg-primary/10"
+                                : "border-muted bg-popover hover:bg-accent hover:text-accent-foreground"
+                            )}
                           >
-                            {['200', '500', '1000'].map(val => (
-                                <FormItem key={val} className="flex-1">
-                                <FormControl>
-                                    <RadioGroupItem value={val} id={`amount-${val}`} className="sr-only" />
-                                </FormControl>
-                                <FormLabel htmlFor={`amount-${val}`} className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer">
-                                    ₹{val}
-                                </FormLabel>
-                                </FormItem>
-                            ))}
-                             <FormItem className="flex-1">
-                                <FormControl>
-                                    <RadioGroupItem value='custom' id="amount-custom" className="sr-only" />
-                                </FormControl>
-                                <FormLabel htmlFor="amount-custom" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer">
-                                    Custom
-                                </FormLabel>
-                            </FormItem>
-                          </RadioGroup>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {selectedAmount === 'custom' && (
-                      <FormField
-                        control={form.control}
-                        name="amount"
-                        render={() => (
-                           <FormItem>
-                                <FormLabel>Custom Amount (₹)</FormLabel>
-                                <FormControl>
-                                    <Input 
-                                        type="number" 
-                                        placeholder="Enter amount" 
-                                        value={customAmount} 
-                                        onChange={handleCustomAmountChange}
-                                        autoFocus
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                        />
+                            Custom
+                          </button>
+                        </div>
+                      </FormControl>
+                       {selectedAmount === 'custom' && (
+                          <div className="pt-2">
+                            <FormLabel>Custom Amount (₹)</FormLabel>
+                            <FormControl>
+                                <Input 
+                                    type="number" 
+                                    placeholder="Enter amount"
+                                    onChange={handleCustomAmountChange}
+                                    autoFocus
+                                    className="mt-2"
+                                />
+                            </FormControl>
+                          </div>
+                      )}
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </div>
+                />
 
                 <Separator />
                 
@@ -256,7 +254,7 @@ export default function DonatePage() {
 
                 <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
                   {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {isSubmitting ? 'Processing...' : `Donate ₹${form.getValues('amount') || '0'}`}
+                  {isSubmitting ? 'Processing...' : `Donate ₹${form.watch('amount') || '0'}`}
                 </Button>
               </form>
             </Form>
