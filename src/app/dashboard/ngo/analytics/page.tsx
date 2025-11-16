@@ -149,7 +149,29 @@ export default function AnalyticsPage() {
           <CardContent>
             <ResponsiveContainer width="100%" height={350}>
                 <PieChart>
-                    <Pie data={categoryData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                    <Pie 
+                        data={categoryData} 
+                        dataKey="value" 
+                        nameKey="name" 
+                        cx="50%" 
+                        cy="50%" 
+                        outerRadius={80} 
+                        labelLine={false}
+                        label={({ name, percent, ...props }) => (
+                            <text
+                                {...props}
+                                x={props.x}
+                                y={props.y}
+                                textAnchor={props.textAnchor}
+                                dominantBaseline="central"
+                                fill="hsl(var(--foreground))"
+                                fontSize={12}
+                                fontWeight={500}
+                            >
+                                {`${name} (${(percent * 100).toFixed(0)}%)`}
+                            </text>
+                        )}
+                        >
                         {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                     </Pie>
                     <Tooltip contentStyle={{backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))'}}/>
