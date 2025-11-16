@@ -39,6 +39,7 @@ export default function DonatePage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [customAmount, setCustomAmount] = React.useState('');
+  const [selectedAmount, setSelectedAmount] = React.useState('200');
 
   const form = useForm<DonationFormValues>({
     resolver: zodResolver(donationSchema),
@@ -50,9 +51,12 @@ export default function DonatePage() {
   });
 
   const handleAmountChange = (value: string) => {
-    form.setValue('amount', value);
+    setSelectedAmount(value);
     if (value !== 'custom') {
         setCustomAmount('');
+        form.setValue('amount', value);
+    } else {
+        form.setValue('amount', customAmount);
     }
   }
 
@@ -77,6 +81,11 @@ export default function DonatePage() {
     router.push('/');
     setIsSubmitting(false);
   }
+  
+  const getButtonVariant = (value: string) => {
+      return selectedAmount === value ? 'default' : 'outline';
+  }
+
 
   return (
     <div className="container py-12 md:py-16">
@@ -98,12 +107,12 @@ export default function DonatePage() {
                   <FormField
                     control={form.control}
                     name="amount"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem className="space-y-3">
                         <FormControl>
                           <RadioGroup
                             onValueChange={handleAmountChange}
-                            defaultValue={field.value}
+                            value={selectedAmount}
                             className="grid grid-cols-2 lg:grid-cols-4 gap-4"
                           >
                             {['200', '500', '1000'].map(val => (
@@ -118,7 +127,7 @@ export default function DonatePage() {
                             ))}
                              <FormItem className="flex-1">
                                 <FormControl>
-                                    <RadioGroupItem value={customAmount || 'custom'} id="amount-custom" className="sr-only" />
+                                    <RadioGroupItem value='custom' id="amount-custom" className="sr-only" />
                                 </FormControl>
                                 <FormLabel htmlFor="amount-custom" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer">
                                     Custom
@@ -130,7 +139,7 @@ export default function DonatePage() {
                       </FormItem>
                     )}
                   />
-                  {form.watch('amount').includes('custom') && (
+                  {selectedAmount === 'custom' && (
                       <FormField
                         control={form.control}
                         name="amount"
@@ -143,6 +152,7 @@ export default function DonatePage() {
                                         placeholder="Enter amount" 
                                         value={customAmount} 
                                         onChange={handleCustomAmountChange}
+                                        autoFocus
                                     />
                                 </FormControl>
                                 <FormMessage />
