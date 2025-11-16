@@ -3,7 +3,13 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Package, Utensils, Handshake, MapPin } from 'lucide-react';
-import InteractiveMap from '@/components/interactive-map';
+import dynamic from 'next/dynamic';
+
+const InteractiveMap = dynamic(() => import('@/components/interactive-map'), {
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-muted flex items-center justify-center"><p className="text-muted-foreground">Loading map...</p></div>
+});
+
 
 const stats = [
   { value: 12500, label: 'KG of Food Saved', icon: Package },

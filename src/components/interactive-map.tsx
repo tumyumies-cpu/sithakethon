@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
 import { HandHeart } from 'lucide-react';
 import ReactDOMServer from 'react-dom/server';
+import React from 'react';
 
 const locations = [
   { position: [12.9716, 77.5946], name: "Bangalore", donations: 120 },
