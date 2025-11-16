@@ -35,10 +35,10 @@ export default function Hero() {
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button size="lg" asChild>
-              <Link href="/providers">For Providers</Link>
+              <Link href="/providers">Share Surplus</Link>
             </Button>
             <Button size="lg" variant="secondary" asChild>
-              <Link href="/ngos">For NGOs</Link>
+              <Link href="/ngos">Find Donations</Link>
             </Button>
           </div>
         </div>
