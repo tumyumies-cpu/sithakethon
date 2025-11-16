@@ -1,6 +1,7 @@
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { UtensilsCrossed, HeartHandshake, Bike } from 'lucide-react';
 
 const ctas = [
@@ -42,19 +43,19 @@ export default function GetStarted() {
 
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
           {ctas.map((cta) => (
-            <Card key={cta.title} className="flex flex-col text-center">
+            <Card key={cta.title} className="flex flex-col text-center transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl">
               <CardHeader className="flex-1">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                  <cta.icon className="h-6 w-6 text-primary" />
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                  <cta.icon className="h-8 w-8 text-primary" />
                 </div>
-                <CardTitle className="mt-4 font-headline">{cta.title}</CardTitle>
+                <CardTitle className="mt-4 font-headline text-xl">{cta.title}</CardTitle>
                 <CardDescription className="mt-2">{cta.description}</CardDescription>
               </CardHeader>
-              <div className="p-6 pt-0">
+              <CardContent className="p-6 pt-0">
                 <Button asChild className="w-full">
                   <Link href={cta.href}>{cta.buttonText}</Link>
                 </Button>
-              </div>
+              </CardContent>
             </Card>
           ))}
         </div>

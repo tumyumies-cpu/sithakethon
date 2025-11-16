@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,7 @@ const heroImage = PlaceHolderImages.find(img => img.id === 'hero-background');
 
 export default function Hero() {
   return (
-    <section className="relative h-[80vh] min-h-[500px] w-full">
+    <section className="relative h-[90vh] min-h-[600px] w-full">
       {heroImage && (
         <Image
           src={heroImage.imageUrl}
@@ -20,9 +21,12 @@ export default function Hero() {
           data-ai-hint={heroImage.imageHint}
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white">
         <div className="container max-w-4xl px-4">
+          <Badge variant="secondary" className="mb-4 bg-white/20 text-white backdrop-blur-sm">
+            Connecting Surplus to Need, Instantly.
+          </Badge>
           <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             Edible food should feed people — not landfills.
           </h1>
@@ -31,21 +35,11 @@ export default function Hero() {
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button size="lg" asChild>
-              <Link href="/auth/signup?role=provider">Post Surplus</Link>
+              <Link href="/signup?role=provider">Post Surplus Food</Link>
             </Button>
             <Button size="lg" variant="secondary" asChild>
-              <Link href="/ngos">I'm an NGO — Claim Food</Link>
+              <Link href="/signup?role=ngo">Claim Food Donations</Link>
             </Button>
-          </div>
-          <div className="mt-12 flex flex-wrap justify-center gap-4 text-sm">
-            <Badge variant="secondary" className="gap-2 bg-white/20 text-white backdrop-blur-sm">
-              <ShieldCheck className="h-4 w-4 text-primary" />
-              Verified partners
-            </Badge>
-            <Badge variant="secondary" className="gap-2 bg-white/20 text-white backdrop-blur-sm">
-              <Medal className="h-4 w-4 text-accent" />
-              10,000+ kg redistributed
-            </Badge>
           </div>
         </div>
       </div>
