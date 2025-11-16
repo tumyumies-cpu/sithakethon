@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,12 +13,12 @@ export default function Hero() {
     <section className="relative h-[90vh] min-h-[600px] w-full">
       {heroImage && (
         <Image
-          src={heroImage.imageUrl}
-          alt={heroImage.description}
+          src="https://images.unsplash.com/photo-1593113646773-ae28c645340d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmb29kJTIwZG9uYXRpb258ZW58MHx8fHwxNzYzOTk0ODgxfDA&ixlib=rb-4.1.0&q=80&w=1080"
+          alt="Hands holding a bowl of food, symbolizing donation and care."
           fill
           className="object-cover"
           priority
-          data-ai-hint={heroImage.imageHint}
+          data-ai-hint="food donation"
         />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
