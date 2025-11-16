@@ -23,20 +23,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useAppContext, HistoryEntry, Reservation } from "@/context/app-context";
 import { format } from "date-fns";
+import { getStatusBadgeVariant } from "@/lib/utils";
 
-
-const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outline" | "success" => {
-    switch (status) {
-        case "Awaiting Pickup":
-            return "secondary";
-        case "In Transit":
-            return "outline";
-        case "Delivered":
-            return "success";
-        default:
-            return "secondary";
-    }
-}
 
 export default function PickupsPage() {
     const { toast } = useToast();
