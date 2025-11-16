@@ -40,8 +40,8 @@ const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outli
 
 export default function PickupsPage() {
     const { toast } = useToast();
-    const { addHistory, reservations, setReservations } = useAppContext();
-    const driverName = "Sunita Sharma"; // Mock current driver
+    const { addHistory, reservations, setReservations, user } = useAppContext();
+    const driverName = user.name === 'Jane Doe' ? 'Sunita Sharma' : user.name; // Mocking for demo, assuming 'Jane Doe' is a placeholder for a specific driver.
 
     const activePickups = reservations.filter(r => r.driverName === driverName);
 
