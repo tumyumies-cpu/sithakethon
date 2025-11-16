@@ -125,7 +125,7 @@ const initialOffers: Offer[] = [
     provider: "The Grand Restaurant",
     location: "Indiranagar, Bangalore",
     providerLogo: "https://picsum.photos/seed/p-logo2/40/40",
-    foodPhoto: "/assets/vegetable-biryani.jpg",
+    foodPhoto: "https://storage.googleapis.com/studio-7882714323.appspot.com/studio-7882714323/7882714323_240723_130327.png",
     dietaryType: "veg",
     category: "cooked",
     quantity: 5,
