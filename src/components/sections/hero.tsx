@@ -40,9 +40,6 @@ export default function Hero() {
             <Button size="lg" variant="secondary" asChild>
               <Link href="/ngos">For NGOs</Link>
             </Button>
-             <Button size="lg" variant="outline" asChild>
-              <Link href="/donate">Donate</Link>
-            </Button>
           </div>
         </div>
       </div>
