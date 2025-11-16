@@ -141,7 +141,7 @@ const initialOffers: Offer[] = [
     provider: "City Bakery",
     location: "Koramangala, Bangalore",
     providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
-    foodPhoto: "https://picsum.photos/seed/food1/600/400",
+    foodPhoto: "/assets/bread-pastries.jpg",
     dietaryType: "veg",
     category: "bakery",
     quantity: 10,
