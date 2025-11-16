@@ -79,7 +79,7 @@ export default function Impact() {
       <div className="container">
         <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className='order-2 md:order-1'>
-                 <div className="mx-auto max-w-2xl text-center md:text-left md:mx-0">
+                 <div className="text-center md:text-left">
                     <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">
                         Our Impact, in Real-Time
                     </h2>
