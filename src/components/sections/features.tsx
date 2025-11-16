@@ -42,11 +42,11 @@ export default function Features() {
   return (
     <section className="bg-secondary py-16 sm:py-24">
       <div className="container">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="text-center">
           <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">
             A Platform Built for Trust and Speed
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
             We've packed PlatePal with features to make food redistribution safe, fast, and transparent.
           </p>
         </div>
