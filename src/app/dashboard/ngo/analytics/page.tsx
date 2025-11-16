@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Utensils, Wheat, Users, Truck, Download, Calendar as CalendarIcon, Lightbulb } from "lucide-react";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Pie, PieChart, Cell } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Pie, PieChart, Cell, Text } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -58,6 +58,20 @@ export default function AnalyticsPage() {
     from: new Date(2024, 0, 20),
     to: addDays(new Date(2024, 0, 20), 20),
   });
+
+  const renderCustomizedLabel = (props: any) => {
+    const { cx, cy, midAngle, innerRadius, outerRadius, percent, index, name } = props;
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <Text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={10}>
+        {`${name} (${(percent * 100).toFixed(0)}%)`}
+      </Text>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -157,20 +171,7 @@ export default function AnalyticsPage() {
                         cy="50%" 
                         outerRadius={80} 
                         labelLine={false}
-                        label={({ name, percent, ...props }) => (
-                            <text
-                                {...props}
-                                x={props.x}
-                                y={props.y}
-                                textAnchor={props.textAnchor}
-                                dominantBaseline="central"
-                                fill="hsl(var(--foreground))"
-                                fontSize={12}
-                                fontWeight={500}
-                            >
-                                {`${name} (${(percent * 100).toFixed(0)}%)`}
-                            </text>
-                        )}
+                        label={renderCustomizedLabel}
                         >
                         {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                     </Pie>
