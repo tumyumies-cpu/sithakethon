@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Package, Utensils, Handshake, MapPin } from 'lucide-react';
+import InteractiveMap from '@/components/interactive-map';
 
 const stats = [
   { value: 12500, label: 'KG of Food Saved', icon: Package },
@@ -94,8 +95,8 @@ export default function Impact() {
                 ))}
                 </div>
             </div>
-            <div className="aspect-[5/4] lg:aspect-auto rounded-lg bg-muted flex items-center justify-center">
-                <p className="text-muted-foreground">Interactive map coming soon</p>
+            <div className="aspect-[5/4] lg:aspect-auto rounded-lg bg-muted flex items-center justify-center overflow-hidden">
+                <InteractiveMap />
             </div>
         </div>
       </div>
