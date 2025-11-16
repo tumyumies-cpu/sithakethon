@@ -41,11 +41,15 @@ export default function AssignDriverPage() {
     const { toast } = useToast();
 
      useEffect(() => {
+        if (!pendingOrder) {
+            setIsScanning(false);
+            return;
+        }
         const timer = setTimeout(() => {
             setIsScanning(false);
         }, 2500); // Simulate scanning for 2.5 seconds
         return () => clearTimeout(timer);
-    }, []);
+    }, [pendingOrder]);
 
     const availableDrivers = useMemo(() => drivers
         .filter(d => d.status === 'active')
@@ -75,9 +79,6 @@ export default function AssignDriverPage() {
     const handleConfirmAssignments = () => {
         if (!pendingOrder) return;
         
-        // This is where you would normally iterate over `selectedDrivers` and notify them.
-        // For our flow, we'll convert the pending order into available tasks.
-
         Object.values(pendingOrder).forEach(({ provider, items }) => {
             const newTask = {
                 id: `TASK-${Date.now()}-${provider.name}`,
@@ -100,8 +101,8 @@ export default function AssignDriverPage() {
             description: "The selected drivers have been notified. The first to accept will be assigned.",
         });
 
-        setPendingOrder(null); // Clear the pending order
         router.push("/dashboard/ngo/reservations");
+        setPendingOrder(null); // Clear the pending order AFTER navigation and processing
     };
 
     if (!pendingOrder && !isScanning) {
@@ -113,7 +114,7 @@ export default function AssignDriverPage() {
                 </CardHeader>
                 <CardContent>
                      <Button asChild>
-                        <Link href="/dashboard/ngo/cart">Back to Cart</Link>
+                        <Link href="/dashboard/ngo/browse">Browse Offers</Link>
                     </Button>
                 </CardContent>
             </Card>
