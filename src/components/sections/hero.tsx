@@ -2,25 +2,20 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import { Medal, ShieldCheck } from 'lucide-react';
-
-const heroImage = PlaceHolderImages.find(img => img.id === 'hero-background');
 
 export default function Hero() {
   return (
     <section className="relative h-[90vh] min-h-[600px] w-full">
-      {heroImage && (
-        <Image
-          src={heroImage.imageUrl}
-          alt={heroImage.description}
-          fill
-          className="object-cover"
-          priority
-          data-ai-hint={heroImage.imageHint}
-        />
-      )}
+      <Image
+        src="/assets/hero-background.jpg"
+        alt="Volunteers sorting through food donations"
+        fill
+        className="object-cover"
+        priority
+        data-ai-hint="volunteers community"
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white">
         <div className="container max-w-4xl px-4">

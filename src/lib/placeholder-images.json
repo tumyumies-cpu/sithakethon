@@ -3,67 +3,67 @@
     {
       "id": "hero-background",
       "description": "Volunteers sorting through food donations in a community center.",
-      "imageUrl": "https://images.unsplash.com/photo-1706806595099-f07588729caf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2b2x1bnRlZXJzJTIwY29tbXVuaXR5fGVufDB8fHx8MTc2MzE3MzQ0Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/hero-background.jpg",
       "imageHint": "volunteers community"
     },
     {
       "id": "how-it-works-provider",
       "description": "A restaurant chef packing surplus food into containers.",
-      "imageUrl": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjaGVmJTIwZm9vZHxlbnwwfHx8fDE3NjMyMzc4NTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/how-it-works-provider.jpg",
       "imageHint": "chef food"
     },
     {
       "id": "how-it-works-ngo",
       "description": "An NGO worker organizing food packages for distribution.",
-      "imageUrl": "https://picsum.photos/seed/3/600/400",
+      "imageUrl": "/assets/how-it-works-ngo.jpg",
       "imageHint": "ngo worker"
     },
     {
       "id": "how-it-works-driver",
       "description": "A delivery driver loading boxes into a vehicle.",
-      "imageUrl": "https://images.unsplash.com/photo-1620455800201-7f00aeef12ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxkZWxpdmVyeSUyMGRyaXZlcnxlbnwwfHx8fDE3NjMxODM1Mzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/how-it-works-driver.jpg",
       "imageHint": "delivery driver"
     },
     {
       "id": "testimonial-1",
       "description": "Headshot of a smiling person for a testimonial.",
-      "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjMxNDEzMjJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/testimonial-1.jpg",
       "imageHint": "person portrait"
     },
     {
       "id": "testimonial-2",
       "description": "Headshot of another smiling person for a testimonial.",
-      "imageUrl": "https://images.unsplash.com/photo-1719087358997-12957d0859e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8d29tYW4lMjBzbWlsaW5nfGVufDB8fHx8MTc2MzE3NTQwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/testimonial-2.jpg",
       "imageHint": "woman smiling"
     },
     {
       "id": "testimonial-3",
       "description": "Headshot of a third person for a testimonial.",
-      "imageUrl": "https://images.unsplash.com/photo-1522556189639-b150ed9c4330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjMxOTUzOTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/testimonial-3.jpg",
       "imageHint": "man portrait"
     },
     {
       "id": "blog-1",
       "description": "A vibrant photo of fresh produce at a market.",
-      "imageUrl": "https://images.unsplash.com/photo-1592558480962-903b06077406?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZnJlc2glMjBwcm9kdWNlfGVufDB8fHx8MTc2MzE0NjYwOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/blog-1.jpg",
       "imageHint": "fresh produce"
     },
     {
       "id": "blog-2",
       "description": "A community gathering with people sharing food.",
-      "imageUrl": "https://images.unsplash.com/photo-1760258920947-70e6a6a6c9f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjb21tdW5pdHklMjBlYXRpbmd8ZW58MHx8fHwxNzYzMjM3ODUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/blog-2.jpg",
       "imageHint": "community eating"
     },
     {
       "id": "blog-3",
       "description": "A close-up of a packed food donation box.",
-      "imageUrl": "https://images.unsplash.com/photo-1760869028361-50af193395e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxkb25hdGlvbiUyMGJveHxlbnwwfHx8fDE3NjMyMzc4NTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/blog-3.jpg",
       "imageHint": "donation box"
     },
     {
       "id": "feature-photo-check",
       "description": "A smartphone scanning a piece of fruit.",
-      "imageUrl": "https://images.unsplash.com/photo-1687969961103-ba6ece2a186f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwaG9uZSUyMHNjYW5uaW5nfGVufDB8fHx8MTc2MzE0MTQ4Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/assets/feature-photo-check.jpg",
       "imageHint": "phone scanning"
     }
   ]

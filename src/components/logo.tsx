@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { HandHeart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 export function Logo({ className }: { className?: string }) {
   return (
@@ -11,9 +12,7 @@ export function Logo({ className }: { className?: string }) {
         className
       )}
     >
-      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors group-hover:bg-primary/90">
-        <HandHeart className="h-5 w-5" />
-      </span>
+      <Image src="/assets/logo.svg" alt="PlatePal Logo" width={32} height={32} />
       <span>PlatePal</span>
     </Link>
   );
