@@ -3,24 +3,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-
-// Statically find the hero image data.
-const heroImage = PlaceHolderImages.find(img => img.id === 'hero-background');
 
 export default function Hero() {
   return (
     <section className="relative h-[90vh] min-h-[600px] w-full">
-      {heroImage && (
-        <Image
-          src="https://images.unsplash.com/photo-1593113646773-ae28c645340d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmb29kJTIwZG9uYXRpb258ZW58MHx8fHwxNzYzOTk0ODgxfDA&ixlib=rb-4.1.0&q=80&w=1080"
-          alt="Hands holding a bowl of food, symbolizing donation and care."
-          fill
-          className="object-cover"
-          priority
-          data-ai-hint="food donation"
-        />
-      )}
+      <Image
+        src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        alt="Hands holding a bowl of food, symbolizing donation and care."
+        fill
+        className="object-cover"
+        priority
+        data-ai-hint="food donation"
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white">
         <div className="container max-w-4xl px-4">
