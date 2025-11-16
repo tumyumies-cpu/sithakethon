@@ -147,7 +147,7 @@ export default function BrowseOffersPage() {
                             <CardFooter className="flex-col items-start gap-2">
                                 <Button className="w-full" onClick={() => { setSelectedOffer(offer); setBookingQuantity(1);}}>
                                     <ShoppingCart size={16} className="mr-2"/>
-                                    Book Now
+                                    Claim Now
                                 </Button>
                             </CardFooter>
                         </Card>
