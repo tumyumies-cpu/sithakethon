@@ -70,10 +70,12 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold">Newsletter</h3>
             <p className="mt-4 text-sm text-muted-foreground">Stay up to date with our latest news and impact stories.</p>
-            <form className="mt-4 flex w-full max-w-sm items-center space-x-2">
-              <Input type="email" placeholder="Email" className="bg-background" />
-              <Button type="submit" size="sm">Subscribe</Button>
-            </form>
+            <div className="mt-4">
+              <form className="flex w-full max-w-sm items-center space-x-2">
+                <Input type="email" placeholder="Email" className="bg-background" />
+                <Button type="submit" size="sm">Subscribe</Button>
+              </form>
+            </div>
           </div>
         </div>
 
