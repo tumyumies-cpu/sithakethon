@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -8,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { ArrowLeft } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -59,8 +61,15 @@ export default function LoginPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-headline text-2xl">Sign In</CardTitle>
-        <CardDescription>Welcome back! Please enter your details.</CardDescription>
+        <div className="relative flex justify-center">
+            <Button variant="ghost" size="icon" className="absolute left-0 top-0" onClick={() => router.back()}>
+                <ArrowLeft />
+            </Button>
+            <div className="text-center">
+                <CardTitle className="font-headline text-2xl">Sign In</CardTitle>
+                <CardDescription>Welcome back! Please enter your details.</CardDescription>
+            </div>
+        </div>
       </CardHeader>
       <CardContent>
         <form className="space-y-4" onSubmit={handleSubmit}>
