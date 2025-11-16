@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Utensils, Wheat, Users, Truck, Download, Calendar as CalendarIcon, Lightbulb } from "lucide-react";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Pie, PieChart, Cell, Text, Sector } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Pie, PieChart, Cell } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -136,6 +136,17 @@ export default function AnalyticsPage() {
             </Button>
         </div>
       </div>
+
+       <Card className="bg-primary/10 border-primary/20">
+            <CardHeader className="flex-row gap-4 items-center">
+                <Lightbulb className="w-8 h-8 text-primary"/>
+                <div>
+                    <CardTitle>AI-Powered Recommendation</CardTitle>
+                    <CardDescription>Donations are highest on Fridays. Consider scheduling an extra driver for Friday evenings to maximize pickups.</CardDescription>
+                </div>
+            </CardHeader>
+        </Card>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {summaryStats.map((stat) => (
           <Card key={stat.title}>
@@ -244,18 +255,6 @@ export default function AnalyticsPage() {
         </Card>
       </div>
 
-        <Card className="bg-primary/10 border-primary/20">
-            <CardHeader className="flex-row gap-4 items-center">
-                <Lightbulb className="w-8 h-8 text-primary"/>
-                <div>
-                    <CardTitle>AI-Powered Recommendation</CardTitle>
-                    <CardDescription>Donations are highest on Fridays. Consider scheduling an extra driver for Friday evenings to maximize pickups.</CardDescription>
-                </div>
-            </CardHeader>
-        </Card>
-
     </div>
   );
 }
-
-    
