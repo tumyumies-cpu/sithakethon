@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 export default function CartPage() {
-    const { cart, setCart, setLastOrder, offers, setOffers } = useAppContext();
+    const { cart, setCart, offers, setOffers, addTask } = useAppContext();
     const { toast } = useToast();
     const router = useRouter();
 
@@ -28,39 +28,65 @@ export default function CartPage() {
     };
 
     const handleConfirmPickup = () => {
-        // This function will now be called, and then we navigate,
-        // and only after navigation do we clear the cart.
-        const processOrder = () => {
-            setLastOrder(groupedByProvider);
+        // Group items by provider
+        const groupedByProvider = cart.reduce((acc, currentItem) => {
+            const providerName = currentItem.offer.provider;
+            if (!acc[providerName]) {
+                acc[providerName] = {
+                    provider: {
+                        name: currentItem.offer.provider,
+                        logo: currentItem.offer.providerLogo,
+                        location: currentItem.offer.location
+                    },
+                    items: []
+                };
+            }
+            acc[providerName].items.push(currentItem);
+            return acc;
+        }, {} as Record<string, { provider: { name: string, logo: string, location: string }, items: typeof cart }>);
 
-            // Update offer quantities
-            const updatedOffers = offers.map(originalOffer => {
-                const cartItem = cart.find(item => item.offer.id === originalOffer.id);
-                if (cartItem) {
-                    const newQuantity = originalOffer.quantity - cartItem.quantity;
-                    return { 
-                        ...originalOffer, 
-                        quantity: newQuantity,
-                        status: newQuantity <= 0 ? 'Reserved' : originalOffer.status,
-                    };
-                }
-                return originalOffer;
-            });
+        // Create a task for each provider
+        Object.values(groupedByProvider).forEach(({ provider, items }) => {
+            const newTask = {
+                id: `TASK-${Date.now()}-${provider.name}`,
+                provider: provider.name,
+                providerLogo: provider.logo,
+                pickupLocation: provider.location,
+                distance: `${(Math.random() * 5 + 1).toFixed(1)} km`, // Mock distance
+                items: items.map(item => ({
+                    name: item.offer.item,
+                    quantity: `${item.quantity} ${item.offer.quantityUnit}`,
+                })),
+                ngo: 'Helping Hands Foundation', // Mocked
+                pickupWindow: '4:00 PM - 5:00 PM', // Mocked
+            };
+            addTask(newTask);
+        });
 
-            setOffers(updatedOffers);
+        // Update offer quantities
+        const updatedOffers = offers.map(originalOffer => {
+            const cartItem = cart.find(item => item.offer.id === originalOffer.id);
+            if (cartItem) {
+                const newQuantity = originalOffer.quantity - cartItem.quantity;
+                return { 
+                    ...originalOffer, 
+                    quantity: newQuantity,
+                    status: newQuantity <= 0 ? 'Reserved' : originalOffer.status,
+                };
+            }
+            return originalOffer;
+        });
 
-            toast({
-                title: "Pickup Confirmed!",
-                description: "Now, let's assign drivers for each pickup location.",
-            });
-            
-            // Clear cart after all processing is done
-            setCart([]);
-        };
+        setOffers(updatedOffers);
 
-        // Process the order and then navigate.
-        processOrder();
-        router.push("/dashboard/ngo/assign-driver");
+        toast({
+            title: "Pickup Confirmed!",
+            description: "New tasks are now available for drivers.",
+        });
+        
+        // Clear cart after all processing is done
+        setCart([]);
+        router.push("/dashboard/ngo/reservations");
     };
 
     const groupedByProvider = useMemo(() => {
@@ -173,13 +199,13 @@ export default function CartPage() {
                         </div>
                         <Separator />
                         <p className="text-xs text-muted-foreground">
-                            Once confirmed, we'll reserve these items for you and you can proceed to assign drivers for pickup.
+                            Once confirmed, we'll reserve these items and notify available drivers.
                         </p>
                     </CardContent>
                     <CardFooter>
                         <Button className="w-full" size="lg" onClick={handleConfirmPickup}>
                             <Truck className="mr-2 h-4 w-4" />
-                            Confirm & Assign Drivers
+                            Confirm Pickup
                         </Button>
                     </CardFooter>
                 </Card>

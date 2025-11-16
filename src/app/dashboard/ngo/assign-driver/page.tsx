@@ -34,67 +34,21 @@ function DriverScanner() {
     )
 }
 
+// NOTE: This page is no longer used in the primary workflow but is kept for potential future use
+// where an NGO might want to manually assign a specific driver. The primary flow now creates a task
+// available to all drivers when an order is confirmed.
 export default function AssignDriverPage() {
-    const { lastOrder, setLastOrder, drivers, addReservation } = useAppContext();
+    const { drivers, addReservation } = useAppContext();
     const [isScanning, setIsScanning] = useState(true);
     const [selectedDrivers, setSelectedDrivers] = useState<Record<string, string[]>>({});
     const router = useRouter();
     const { toast } = useToast();
-
-    // This effect ensures that we only show the page if there's an active order.
-    // It also handles the scanning animation.
-    useEffect(() => {
-        const hasOrder = lastOrder && Object.keys(lastOrder).length > 0;
-        
-        if (!hasOrder) {
-            router.replace('/dashboard/ngo/cart');
-            return;
-        }
-
-        const scanTimeout = setTimeout(() => {
-            setIsScanning(false);
-        }, 3000);
-
-        return () => clearTimeout(scanTimeout);
-
-    }, [lastOrder, router]);
     
-    const handleConfirmAssignments = () => {
-        Object.entries(lastOrder).forEach(([providerName, orderGroup]) => {
-            orderGroup.items.forEach(item => {
-                const driverIds = selectedDrivers[providerName] || [];
-                // For this demo, we'll just assign the first selected driver.
-                // A real app might notify all and let the first accept.
-                const assignedDriver = drivers.find(d => d.id === driverIds[0]);
+    // This page is deprecated, redirect to reservations
+     useEffect(() => {
+        router.replace('/dashboard/ngo/reservations');
+    }, [router]);
 
-                if (assignedDriver) {
-                    addReservation({
-                        id: `RES-${Date.now()}-${item.offer.id}`,
-                        item: item.offer.item,
-                        quantity: item.quantity,
-                        quantityUnit: item.offer.quantityUnit,
-                        provider: providerName,
-                        providerLogo: orderGroup.provider.logo,
-                        providerAddress: item.offer.location, // simplified
-                        providerContact: { name: 'Provider Contact', phone: '999-999-9999' },
-                        status: 'Awaiting Pickup',
-                        pickupTime: `Today, ${format(new Date(), 'p')}`, // Simplified
-                        ngo: 'Helping Hands Foundation', // Mocked
-                        ngoAddress: 'Jayanagar, Bangalore', // Mocked
-                        driverName: assignedDriver.name,
-                        driverAvatar: assignedDriver.avatar,
-                    });
-                }
-            });
-        });
-
-        toast({
-            title: "Drivers Notified!",
-            description: "All selected drivers have been notified. The first to accept will be assigned the pickup.",
-        });
-        setLastOrder({});
-        router.push("/dashboard/ngo/reservations");
-    }
 
     const availableDrivers = drivers
         .filter(d => d.status === 'active')
@@ -121,14 +75,6 @@ export default function AssignDriverPage() {
         setSelectedDrivers(prev => ({...prev, [providerName]: value}));
     }
     
-    const hasOrder = lastOrder && Object.keys(lastOrder).length > 0;
-    
-    if (!hasOrder) {
-        // Render nothing or a loading spinner while redirecting
-        return null;
-    }
-
-
     return (
         <Card>
             <CardHeader>
@@ -136,72 +82,9 @@ export default function AssignDriverPage() {
                 <CardDescription>Select one or more available drivers to notify for each pickup. The first driver to accept will get the task.</CardDescription>
             </CardHeader>
             <CardContent>
-                {isScanning ? (
-                    <DriverScanner />
-                ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div className="lg:col-span-2 space-y-6">
-                            {Object.values(lastOrder).map(({ provider, items }) => (
-                                <Card key={provider.name} className="bg-background/50">
-                                    <CardHeader className="flex flex-row items-center gap-4 pb-4">
-                                        <Image src={provider.logo} alt={provider.name} width={40} height={40} className="rounded-full" />
-                                        <div>
-                                            <CardTitle className="text-lg">{provider.name}</CardTitle>
-                                            <CardDescription className="flex items-center gap-2">
-                                                <MapPin size={14} /> {provider.location}
-                                            </CardDescription>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="mb-4">
-                                            <p className="font-medium text-sm mb-2">Items to be picked up:</p>
-                                            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
-                                                {items.map(item => (
-                                                    <li key={item.offer.id}>{item.offer.item} ({item.quantity} {item.offer.quantityUnit})</li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                        <Separator className="my-4"/>
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium">Notify Drivers</label>
-                                            <MultiSelect
-                                                options={driverOptions}
-                                                placeholder="Select drivers to notify..."
-                                                emptyIndicator="No drivers available."
-                                                onValueChange={(value) => handleDriverSelection(provider.name, value)}
-                                            />
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
-                        <div className="lg:col-span-1">
-                             <Card className="sticky top-24">
-                                <CardHeader>
-                                    <CardTitle className="text-lg">Summary</CardTitle>
-                                    <CardDescription>Confirm to send out notifications for all pickups.</CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    {availableDrivers.slice(0, 3).map(driver => (
-                                        <div key={driver.id} className="flex items-center gap-4">
-                                            <Avatar>
-                                                <AvatarImage src={driver.avatar} alt={driver.name} />
-                                                <AvatarFallback>{driver.name.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                            <div>
-                                                <p className="font-semibold">{driver.name}</p>
-                                                <p className="text-sm text-muted-foreground">{driver.distance}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                    {availableDrivers.length > 3 && <p className="text-sm text-muted-foreground">+ {availableDrivers.length-3} more drivers available</p>}
-                                    <Separator />
-                                    <Button className="w-full" size="lg" onClick={handleConfirmAssignments}>Confirm & Notify Drivers</Button>
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </div>
-                )}
+                <div className="text-center py-12 text-muted-foreground">
+                    This page is no longer in use. Tasks are now automatically created for all drivers.
+                </div>
             </CardContent>
         </Card>
     );

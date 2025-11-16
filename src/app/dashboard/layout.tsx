@@ -174,16 +174,10 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
     };
     
     let role = getRoleFromPath();
-    if(pathname.startsWith('/dashboard/ngo/assign-driver')) {
-        role = 'ngo';
-    }
-
     setCurrentRole(role);
     const activeRoute = roleConfig[role].nav.find(item => item.href === pathname);
     let currentTitle = activeRoute?.label || roleConfig[role].title;
-    if (pathname === '/dashboard/ngo/assign-driver') {
-      currentTitle = 'Assign Drivers';
-    } else if (pathname === '/dashboard/provider') {
+    if (pathname === '/dashboard/provider') {
         currentTitle = 'Provider Dashboard';
     } else if (pathname === '/dashboard/ngo') {
         currentTitle = 'NGO Dashboard';

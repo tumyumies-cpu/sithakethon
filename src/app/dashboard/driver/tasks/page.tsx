@@ -18,51 +18,47 @@ import {
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-
-
-const availableTasks = [
-  {
-    id: "TASK-001",
-    provider: "City Bakery",
-    providerLogo: "https://picsum.photos/seed/p-logo1/40/40",
-    pickupLocation: "Koramangala",
-    distance: "1.2 km",
-    items: [
-      { name: "Surplus Bread & Pastries", quantity: "10 kg" },
-    ],
-    ngo: "Good Samaritan Shelter",
-    pickupWindow: "4:00 PM - 5:00 PM",
-  },
-  {
-    id: "TASK-002",
-    provider: "Spicy Delights",
-    providerLogo: "https://picsum.photos/seed/p-logo4/40/40",
-    pickupLocation: "BTM Layout",
-    distance: "3.5 km",
-    items: [
-      { name: "Chicken Biryani", quantity: "8 kg" },
-    ],
-    ngo: "Helping Hands Foundation",
-    pickupWindow: "7:00 PM - 7:30 PM",
-  },
-];
-
-type Task = typeof availableTasks[0];
+import { useAppContext, Task } from "@/context/app-context";
+import { format } from "date-fns";
 
 export default function TasksPage() {
+    const { tasks, setTasks, addReservation, user } = useAppContext();
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const { toast } = useToast();
     const router = useRouter();
 
     const handleAcceptTask = () => {
         if (!selectedTask) return;
-        // Here you would typically call an API to accept the task.
-        // The API would handle the "first come, first served" logic.
-        // For this demo, we'll just simulate it.
+        
+        // Remove task from available tasks
+        setTasks(prev => prev.filter(t => t.id !== selectedTask!.id));
+
+        // Create a reservation for each item in the task
+        selectedTask.items.forEach(item => {
+            const [quantity, unit] = item.quantity.split(' ');
+            addReservation({
+                id: `RES-${Date.now()}-${item.name}`,
+                item: item.name,
+                quantity: parseFloat(quantity),
+                quantityUnit: unit,
+                provider: selectedTask.provider,
+                providerLogo: selectedTask.providerLogo,
+                providerAddress: selectedTask.pickupLocation,
+                providerContact: { name: 'Provider Contact', phone: '999-999-9999' },
+                status: 'Awaiting Pickup',
+                pickupTime: `Today, ${format(new Date(), 'p')}`, // Simplified
+                ngo: selectedTask.ngo,
+                ngoAddress: 'Jayanagar, Bangalore', // Mocked
+                driverName: user.name === 'Jane Doe' ? 'Sunita Sharma' : user.name, // Mock current driver
+                driverAvatar: user.avatar,
+            });
+        });
+
         toast({
             title: "Task Accepted!",
             description: `You are now assigned to the pickup from ${selectedTask.provider}.`,
         });
+
         setSelectedTask(null);
         router.push("/dashboard/driver/pickups");
     }
@@ -77,8 +73,8 @@ export default function TasksPage() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {availableTasks.length > 0 ? (
-            availableTasks.map(task => (
+        {tasks.length > 0 ? (
+            tasks.map(task => (
             <Card key={task.id} className="overflow-hidden">
                 <CardHeader className="flex flex-row items-center gap-4 bg-muted/50 p-4">
                     <Image src={task.providerLogo} alt={task.provider} width={40} height={40} className="rounded-full" />

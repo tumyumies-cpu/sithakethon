@@ -76,6 +76,21 @@ export interface Reservation {
   driverAvatar: string;
 }
 
+export interface Task {
+    id: string;
+    provider: string;
+    providerLogo: string;
+    pickupLocation: string;
+    distance: string;
+    items: {
+      name: string;
+      quantity: string;
+    }[];
+    ngo: string;
+    pickupWindow: string;
+}
+
+
 interface AppContextType {
   cart: CartItem[];
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
@@ -88,8 +103,6 @@ interface AppContextType {
   offers: Offer[];
   setOffers: React.Dispatch<React.SetStateAction<Offer[]>>;
   addOffer: (offer: Offer) => void;
-  lastOrder: GroupedOrder;
-  setLastOrder: React.Dispatch<React.SetStateAction<GroupedOrder>>;
   drivers: Driver[];
   setDrivers: React.Dispatch<React.SetStateAction<Driver[]>>;
   history: HistoryEntry[];
@@ -97,6 +110,9 @@ interface AppContextType {
   reservations: Reservation[];
   setReservations: React.Dispatch<React.SetStateAction<Reservation[]>>;
   addReservation: (reservation: Reservation) => void;
+  tasks: Task[];
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  addTask: (task: Task) => void;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -213,9 +229,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [currentRole, setCurrentRole] = useState<Role>('provider');
   const [pageTitle, setPageTitle] = useState('Provider Dashboard');
-  const [lastOrder, setLastOrder] = useState<GroupedOrder>({});
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
@@ -233,6 +249,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const addReservation = (reservation: Reservation) => {
     setReservations(prev => [...prev, reservation]);
+  };
+
+  const addTask = (task: Task) => {
+    setTasks(prev => [...prev, task]);
   };
 
   useEffect(() => {
@@ -260,11 +280,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     handleLogout,
     offers, setOffers,
     addOffer,
-    lastOrder, setLastOrder,
     drivers, setDrivers,
     history, addHistory,
     reservations, setReservations,
     addReservation,
+    tasks, setTasks,
+    addTask,
   };
 
   return (
