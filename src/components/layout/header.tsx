@@ -22,9 +22,11 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <Logo />
-
+      <div className="container flex h-16 items-center">
+        <div className="mr-auto flex items-center">
+          <Logo />
+        </div>
+        
         <nav className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
             <Link
@@ -37,7 +39,7 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-2 md:flex ml-6">
           <Button variant="ghost" asChild>
             <Link href="/login">Sign In</Link>
           </Button>
@@ -46,7 +48,7 @@ export default function Header() {
           </Button>
         </div>
 
-        <div className="md:hidden">
+        <div className="md:hidden ml-auto">
           <Sheet open={isMenuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -54,9 +56,9 @@ export default function Header() {
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-full max-w-xs">
-              <div className="flex h-full flex-col">
-                <div className="mb-6 flex items-center justify-between">
+            <SheetContent side="right" className="w-full max-w-sm">
+              <div className="flex h-full flex-col p-6">
+                <div className="mb-8 flex items-center justify-between">
                   <Logo />
                   <SheetTrigger asChild>
                      <Button variant="ghost" size="icon">
@@ -65,23 +67,23 @@ export default function Header() {
                       </Button>
                   </SheetTrigger>
                 </div>
-                <nav className="flex flex-1 flex-col gap-4">
+                <nav className="flex flex-1 flex-col gap-y-4">
                   {navLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="text-lg font-medium"
+                      className="text-lg font-medium text-foreground/80 hover:text-primary"
                       onClick={() => setMenuOpen(false)}
                     >
                       {link.label}
                     </Link>
                   ))}
                 </nav>
-                <div className="mt-6 flex flex-col gap-2">
-                  <Button variant="outline" asChild>
+                <div className="mt-8 flex flex-col gap-2">
+                  <Button variant="outline" size="lg" asChild>
                     <Link href="/login" onClick={() => setMenuOpen(false)}>Sign In</Link>
                   </Button>
-                  <Button asChild>
+                  <Button size="lg" asChild>
                     <Link href="/donate" onClick={() => setMenuOpen(false)}>Donate</Link>
                   </Button>
                 </div>
