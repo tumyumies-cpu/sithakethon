@@ -158,11 +158,12 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getRoleFromPath = (): keyof typeof roleConfig => {
+      const mockEmail = localStorage.getItem('mockUserEmail');
+      
       if (pathname.startsWith('/dashboard/provider')) return 'provider';
       if (pathname.startsWith('/dashboard/ngo')) return 'ngo';
       if (pathname.startsWith('/dashboard/driver')) return 'driver';
 
-      const mockEmail = typeof window !== 'undefined' ? localStorage.getItem('mockUserEmail') : null;
       if (mockEmail?.includes('ngo')) return 'ngo';
       if (mockEmail?.includes('driver')) return 'driver';
       if (mockEmail?.includes('admin')) {
