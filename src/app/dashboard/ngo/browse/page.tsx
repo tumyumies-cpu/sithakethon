@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ListFilter, MapPin, ShoppingCart, Tag, Weight, Clock, Info } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { useAppContext, Offer } from "@/context/app-context";
@@ -22,6 +22,13 @@ export default function BrowseOffersPage() {
     const { offers, cart, setCart } = useAppContext();
     const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
     const [bookingQuantity, setBookingQuantity] = useState(1);
+    const [activeOffers, setActiveOffers] = useState<Offer[]>([]);
+    
+    useEffect(() => {
+        // This code runs only on the client, after hydration
+        setActiveOffers(offers.filter(offer => offer.status === 'Active'));
+    }, [offers]);
+
 
     const { toast } = useToast();
 
@@ -52,8 +59,6 @@ export default function BrowseOffersPage() {
         });
         setSelectedOffer(null);
     }
-    
-    const activeOffers = offers.filter(offer => offer.status === 'Active');
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
