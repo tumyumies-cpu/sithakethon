@@ -41,7 +41,7 @@ const getStatusBadgeVariant = (status: string): "default" | "secondary" | "outli
 export default function PickupsPage() {
     const { toast } = useToast();
     const { addHistory, reservations, setReservations, user } = useAppContext();
-    const driverName = user.name === 'Jane Doe' ? 'Sunita Sharma' : user.name; // Mocking for demo, assuming 'Jane Doe' is a placeholder for a specific driver.
+    const driverName = user.name === 'Jane Doe' ? 'Sunita Sharma' : user.name; 
 
     const activePickups = reservations.filter(r => r.driverName === driverName);
 
@@ -55,7 +55,7 @@ export default function PickupsPage() {
                 driver: driverName,
                 date: format(new Date(), "PPP"),
                 status: "Completed",
-                tokens: 50, // Mock token calculation
+                tokens: 50, 
                 quantity: pickup.quantity,
                 quantityUnit: pickup.quantityUnit
             };
@@ -68,10 +68,10 @@ export default function PickupsPage() {
                 description: "The order has been marked as delivered. Great job!",
             });
         } else {
-             const updatedPickups = reservations.map(p => 
+             const updatedReservations = reservations.map(p => 
                 p.id === pickup.id ? { ...p, status: newStatus } : p
             );
-            setReservations(updatedPickups);
+            setReservations(updatedReservations);
              toast({
                 title: `Status Updated: ${newStatus}`,
                 description: "The job status has been updated successfully.",
