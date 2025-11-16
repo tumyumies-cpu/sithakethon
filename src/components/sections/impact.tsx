@@ -3,8 +3,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Package, Utensils, Handshake, MapPin } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import Image from 'next/image';
 
 const stats = [
   { value: 12500, label: 'KG of Food Saved', icon: Package },
@@ -63,13 +61,14 @@ export default function Impact() {
             { threshold: 0.1 }
         );
 
-        if (ref.current) {
-            observer.observe(ref.current);
+        const currentRef = ref.current;
+        if (currentRef) {
+            observer.observe(currentRef);
         }
 
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
+            if (currentRef) {
+                observer.unobserve(currentRef);
             }
         };
     }, []);
@@ -77,34 +76,34 @@ export default function Impact() {
   return (
     <section className="py-16 sm:py-24" ref={ref}>
       <div className="container">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className='order-2 md:order-1'>
-                 <div className="text-center md:text-left">
-                    <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">
-                        Our Impact, in Real-Time
-                    </h2>
-                    <p className="mt-4 text-lg text-muted-foreground">
-                        Every donation creates a ripple effect of positive change across communities.
-                    </p>
-                </div>
-                <div className="mt-12 grid grid-cols-2 gap-8">
-                {stats.map((stat, index) => (
-                    <div key={index} className="text-center md:text-left">
-                    <div className="flex justify-center md:justify-start items-center gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                            <stat.icon className="h-6 w-6 text-primary" />
-                        </div>
-                        <div>
-                            {inView && <AnimatedCounter to={stat.value} />}
-                             <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
-                        </div>
-                    </div>
-                    </div>
-                ))}
-                </div>
+        <div className="mx-auto max-w-2xl lg:max-w-none">
+            <div className="text-center">
+                <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">
+                    Our Impact, in Real-Time
+                </h2>
+                <p className="mt-4 text-lg text-muted-foreground">
+                    Every donation creates a ripple effect of positive change across communities.
+                </p>
             </div>
-             <div className="order-1 md:order-2 h-80 md:h-[500px] w-full rounded-lg bg-muted flex items-center justify-center">
-                <p className="text-muted-foreground">Interactive map coming soon</p>
+            <div className="mt-16 grid grid-cols-1 items-center gap-y-16 gap-x-8 lg:grid-cols-2">
+                <div>
+                    <div className="grid grid-cols-2 gap-8">
+                    {stats.map((stat, index) => (
+                        <div key={index} className="flex items-start gap-4">
+                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary/10">
+                                <stat.icon className="h-6 w-6 text-primary" />
+                            </div>
+                            <div>
+                                {inView && <AnimatedCounter to={stat.value} />}
+                                <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
+                            </div>
+                        </div>
+                    ))}
+                    </div>
+                </div>
+                <div className="aspect-[5/4] lg:aspect-auto rounded-lg bg-muted flex items-center justify-center">
+                    <p className="text-muted-foreground">Interactive map coming soon</p>
+                </div>
             </div>
         </div>
       </div>
