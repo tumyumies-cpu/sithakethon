@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useAppContext } from "@/context/app-context";
+import { useAppContext, CartItem } from "@/context/app-context";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, X, ArrowLeft, Building, Truck } from "lucide-react";
 import Image from "next/image";
@@ -13,8 +13,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
+export type GroupedOrder = Record<string, { provider: { name: string; logo: string; location: string; }; items: CartItem[]; }>;
+
 export default function CartPage() {
-    const { cart, setCart, offers, setOffers, addTask } = useAppContext();
+    const { cart, setCart, offers, setOffers, setPendingOrder } = useAppContext();
     const { toast } = useToast();
     const router = useRouter();
 
@@ -43,26 +45,9 @@ export default function CartPage() {
             }
             acc[providerName].items.push(currentItem);
             return acc;
-        }, {} as Record<string, { provider: { name: string, logo: string, location: string }, items: typeof cart }>);
+        }, {} as GroupedOrder);
 
-        // Create a task for each provider
-        Object.values(groupedByProvider).forEach(({ provider, items }) => {
-            const newTask = {
-                id: `TASK-${Date.now()}-${provider.name}`,
-                provider: provider.name,
-                providerLogo: provider.logo,
-                pickupLocation: provider.location,
-                distance: `${(Math.random() * 5 + 1).toFixed(1)} km`, // Mock distance
-                items: items.map(item => ({
-                    name: item.offer.item,
-                    quantity: `${item.quantity} ${item.offer.quantityUnit}`,
-                })),
-                ngo: 'Helping Hands Foundation', // Mocked
-                pickupWindow: '4:00 PM - 5:00 PM', // Mocked
-            };
-            addTask(newTask);
-        });
-
+        
         // Update offer quantities
         const updatedOffers = offers.map(originalOffer => {
             const cartItem = cart.find(item => item.offer.id === originalOffer.id);
@@ -75,18 +60,18 @@ export default function CartPage() {
                 };
             }
             return originalOffer;
-        });
+        }).filter(offer => offer.quantity > 0); // Remove offers with 0 quantity
 
         setOffers(updatedOffers);
 
-        toast({
-            title: "Pickup Confirmed!",
-            description: "New tasks are now available for drivers.",
-        });
+        // Set the pending order for the driver assignment page
+        setPendingOrder(groupedByProvider);
         
         // Clear cart after all processing is done
         setCart([]);
-        router.push("/dashboard/ngo/reservations");
+
+        // Navigate to driver assignment page
+        router.push("/dashboard/ngo/assign-driver");
     };
 
     const groupedByProvider = useMemo(() => {
@@ -104,7 +89,7 @@ export default function CartPage() {
             }
             acc[providerName].items.push(currentItem);
             return acc;
-        }, {} as Record<string, { provider: { name: string, logo: string, location: string }, items: typeof cart }>);
+        }, {} as GroupedOrder);
     }, [cart]);
 
 
@@ -199,13 +184,13 @@ export default function CartPage() {
                         </div>
                         <Separator />
                         <p className="text-xs text-muted-foreground">
-                            Once confirmed, we'll reserve these items and notify available drivers.
+                            Once confirmed, you will be asked to select drivers for this pickup.
                         </p>
                     </CardContent>
                     <CardFooter>
                         <Button className="w-full" size="lg" onClick={handleConfirmPickup}>
                             <Truck className="mr-2 h-4 w-4" />
-                            Confirm Pickup
+                            Confirm & Select Drivers
                         </Button>
                     </CardFooter>
                 </Card>

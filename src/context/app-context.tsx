@@ -2,6 +2,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { GroupedOrder } from '@/app/dashboard/ngo/cart/page';
 
 // Mock user data. In a real app, this would come from an auth context.
 const mockUser = {
@@ -43,8 +44,6 @@ export interface Driver {
     status: 'active' | 'inactive';
     vehicleId: string;
 }
-
-export type GroupedOrder = Record<string, { provider: { name: string; logo: string; location: string; }; items: CartItem[]; }>;
 
 export interface HistoryEntry {
   id: string;
@@ -113,6 +112,8 @@ interface AppContextType {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   addTask: (task: Task) => void;
+  pendingOrder: GroupedOrder | null;
+  setPendingOrder: React.Dispatch<React.SetStateAction<GroupedOrder | null>>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -230,6 +231,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [pendingOrder, setPendingOrder] = useState<GroupedOrder | null>(null);
   const [currentRole, setCurrentRole] = useState<Role>('provider');
   const [pageTitle, setPageTitle] = useState('Provider Dashboard');
 
@@ -286,6 +288,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addReservation,
     tasks, setTasks,
     addTask,
+    pendingOrder, setPendingOrder
   };
 
   return (
